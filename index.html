@@ -13,16 +13,22 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden !important;
         }
 
         .main-container {
             max-width: 1400px;
             margin: 0 auto;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -31,6 +37,7 @@
             margin-bottom: 30px;
             text-align: center;
             font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .glass-card {
@@ -38,8 +45,17 @@
             backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             padding: 25px;
             margin-bottom: 25px;
+            transition: transform 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
         }
 
         .search-tabs {
@@ -76,12 +92,18 @@
             display: block;
         }
 
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
         .search-box input {
             width: 100%;
             padding: 12px 20px;
             border: 2px solid #e1e8ed;
             border-radius: 50px;
             font-size: 16px;
+            transition: all 0.3s ease;
             background: #f8f9fa;
         }
 
@@ -89,6 +111,7 @@
             outline: none;
             border-color: #3498db;
             background: white;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
         }
 
         .search-btn {
@@ -99,6 +122,13 @@
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .morningstar-btn {
@@ -109,6 +139,13 @@
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .morningstar-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
         }
 
         .investment-result {
@@ -117,6 +154,15 @@
             padding: 20px;
             margin-bottom: 15px;
             border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .investment-result:hover {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
 
         .investment-result.morningstar {
@@ -130,6 +176,7 @@
             font-size: 14px;
             font-weight: 600;
             margin: 3px;
+            white-space: nowrap;
         }
 
         .performance-positive {
@@ -147,6 +194,75 @@
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .portfolio-header h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .portfolio-current .portfolio-header {
+            border-bottom-color: #3498db;
+        }
+
+        .portfolio-proposed .portfolio-header {
+            border-bottom-color: #27ae60;
+        }
+
+        .btn-clear {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .btn-add-current {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .btn-add-proposed {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-current:hover, .btn-add-proposed:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .portfolio-table {
@@ -159,30 +275,20 @@
             padding: 12px;
             text-align: left;
             font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
         }
 
         .portfolio-table td {
             padding: 12px;
             border-bottom: 1px solid #f0f0f0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 300px;
         }
 
-        .btn-add-current {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-
-        .btn-add-proposed {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
+        .portfolio-table tbody tr:hover {
+            background: #f8f9fa;
         }
 
         .btn-remove {
@@ -191,16 +297,63 @@
             border: none;
             padding: 4px 12px;
             border-radius: 15px;
+            font-size: 12px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .btn-clear {
-            background: #e74c3c;
+        .btn-remove:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            padding: 6px 16px;
             border-radius: 20px;
-            cursor: pointer;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .summary-item h5 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .summary-item div {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .summary-item strong {
+            font-size: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #comparisonChart {
+            max-width: 100% !important;
+            height: 100% !important;
+            position: relative !important;
         }
 
         .api-status {
@@ -220,31 +373,55 @@
             color: #721c24;
         }
 
-        .summary-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
         .loading {
             text-align: center;
             padding: 50px;
             color: #6c757d;
         }
 
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px;
             color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .chart-container {
+                padding: 15px;
+            }
+            
+            .chart-container > div {
+                height: 300px !important;
+                max-height: 300px !important;
+            }
+
+            .search-tabs {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -284,7 +461,7 @@
                             <input type="text" id="apirSearch" placeholder="🔍 Search by APIR code...">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 d-flex align-items-center">
                         <button class="search-btn w-100" onclick="performCSVSearch()">
                             Search CSV
                         </button>
@@ -301,19 +478,19 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <select id="searchType" class="form-select">
+                        <select id="searchType" class="form-select" style="padding: 12px; border-radius: 50px;">
                             <option value="funds">Funds</option>
                             <option value="stocks">Stocks</option>
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <select id="countrySelect" class="form-select">
+                        <select id="countrySelect" class="form-select" style="padding: 12px; border-radius: 50px;">
                             <option value="au">Australia</option>
                             <option value="us">United States</option>
                             <option value="uk">United Kingdom</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 d-flex align-items-center">
                         <button class="morningstar-btn w-100" onclick="performMorningstarSearch()">
                             <i class="bi bi-search"></i> Search Morningstar
                         </button>
@@ -322,21 +499,21 @@
             </div>
             
             <!-- Search Results -->
-            <div class="mt-4" id="searchResultsSection" style="display: none;">
+            <div class="mt-4" id="searchResultsSection" style="display: none; max-width: 100%; overflow: hidden;">
                 <h5 class="mb-3">Search Results</h5>
-                <div id="searchResults"></div>
+                <div id="searchResults" style="max-width: 100%; overflow-x: auto;"></div>
             </div>
         </div>
 
         <!-- Performance Summary -->
         <div class="summary-box" id="summarySection" style="display: none;">
             <h4><i class="bi bi-bar-chart-line"></i> Performance Summary</h4>
-            <div class="row mt-3">
-                <div class="col-md-6">
+            <div class="summary-grid">
+                <div class="summary-item">
                     <h5><i class="bi bi-folder2"></i> Current Portfolio</h5>
                     <div id="currentSummary">No investments selected</div>
                 </div>
-                <div class="col-md-6">
+                <div class="summary-item">
                     <h5><i class="bi bi-folder2-open"></i> Proposed Portfolio</h5>
                     <div id="proposedSummary">No investments selected</div>
                 </div>
@@ -347,8 +524,8 @@
         <div class="row">
             <!-- Current Portfolio -->
             <div class="col-lg-6 mb-4">
-                <div class="portfolio-section">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="portfolio-section portfolio-current">
+                    <div class="portfolio-header">
                         <h4><i class="bi bi-briefcase"></i> Current Portfolio</h4>
                         <button class="btn-clear" onclick="clearPortfolio('current')">
                             <i class="bi bi-trash"></i> Clear
@@ -388,8 +565,8 @@
 
             <!-- Proposed Portfolio -->
             <div class="col-lg-6 mb-4">
-                <div class="portfolio-section">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="portfolio-section portfolio-proposed">
+                    <div class="portfolio-header">
                         <h4><i class="bi bi-lightbulb"></i> Proposed Portfolio</h4>
                         <button class="btn-clear" onclick="clearPortfolio('proposed')">
                             <i class="bi bi-trash"></i> Clear
@@ -431,7 +608,7 @@
         <!-- Comparison Chart -->
         <div class="chart-container" id="comparisonSection" style="display: none;">
             <h4 class="mb-4"><i class="bi bi-graph-up-arrow"></i> Performance Comparison</h4>
-            <div style="position: relative; height: 400px;">
+            <div style="position: relative; height: 400px; max-height: 400px; overflow: hidden;">
                 <canvas id="comparisonChart"></canvas>
             </div>
         </div>
@@ -454,7 +631,7 @@
         let proposedPortfolio = [];
         let comparisonChart = null;
         
-        // CHANGE THIS LINE TO YOUR PYTHONANYWHERE URL:
+        // CHANGE THIS TO YOUR RENDER URL:
         const API_BASE_URL = 'https://investment-tool-9gxo.onrender.com/api';
         
         // Load data when page loads
@@ -501,7 +678,12 @@
         // Load CSV data
         function loadCSVData() {
             fetch('./2025(in).csv')
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load CSV file');
+                    }
+                    return response.text();
+                })
                 .then(data => {
                     parseCSV(data);
                     document.getElementById('loadingState').style.display = 'none';
@@ -510,7 +692,7 @@
                     console.error('Error loading CSV:', error);
                     document.getElementById('loadingState').innerHTML = `
                         <i class="bi bi-exclamation-circle text-danger"></i>
-                        <div class="text-danger">Error loading CSV data.</div>
+                        <div class="text-danger">Error loading investment data. Please ensure 2025(in).csv is in the same directory.</div>
                     `;
                 });
         }
@@ -521,14 +703,48 @@
                 header: true,
                 skipEmptyLines: true,
                 complete: function(results) {
-                    processData(results.data);
+                    // Check if the CSV has headers or if we need to assign them
+                    if (results.data.length > 0) {
+                        const firstRow = results.data[0];
+                        const keys = Object.keys(firstRow);
+                        
+                        // If the first column doesn't look like "APIR CODE", assume no headers
+                        if (!keys.includes('APIR CODE') && !keys.includes('INVESTMENT NAME')) {
+                            // Parse without headers and assign them manually
+                            Papa.parse(csvData, {
+                                header: false,
+                                skipEmptyLines: true,
+                                complete: function(resultsNoHeader) {
+                                    // Skip the first row if it contains headers
+                                    const dataRows = resultsNoHeader.data;
+                                    const startIndex = (dataRows[0] && dataRows[0][0] === 'APIR CODE') ? 1 : 0;
+                                    
+                                    const processedData = dataRows.slice(startIndex).map(row => ({
+                                        'APIR CODE': row[0] || '',
+                                        'INVESTMENT NAME': row[1] || '',
+                                        '3 Months': row[2] || '',
+                                        '1 Year': row[3] || '',
+                                        '3 Years p.a': row[4] || '',
+                                        '5 Years p.a': row[5] || '',
+                                        '10 Years p.a': row[6] || '',
+                                        'TCR': row[7] || ''
+                                    }));
+                                    
+                                    processData(processedData);
+                                }
+                            });
+                        } else {
+                            processData(results.data);
+                        }
+                    }
                 }
             });
         }
         
-        // Process the data
+        // Process the data with correct column mappings
         function processData(data) {
             investmentsData = data.map(row => {
+                // Parse performance values
                 const parsePerformance = (value) => {
                     if (!value || value === '' || value === 'N/A') return null;
                     const parsed = parseFloat(value);
@@ -544,11 +760,13 @@
                     fiveYears: parsePerformance(row['5 Years p.a']),
                     tenYears: parsePerformance(row['10 Years p.a']),
                     tcr: parsePerformance(row['TCR']),
-                    status: 'CSV Data'
+                    assetClass: 'Domestic Equity', // Default since not in new format
+                    sector: '', // Not in new format
+                    status: 'CSV Data' // All investments in new format are approved
                 };
-            }).filter(item => item.name && item.name.trim() !== '');
+            }).filter(item => item.name && item.name.trim() !== '' && item.apir && item.apir.trim() !== '');
             
-            console.log('Loaded', investmentsData.length, 'investments from CSV');
+            console.log('Loaded', investmentsData.length, 'investments');
         }
         
         // Perform CSV search
@@ -616,6 +834,7 @@
         // Display search results
         function displaySearchResults(results, source) {
             const resultsDiv = document.getElementById('searchResults');
+            const resultsSection = document.getElementById('searchResultsSection');
             
             if (results.length === 0) {
                 resultsDiv.innerHTML = '<p class="text-muted text-center">No investments found</p>';
@@ -632,6 +851,7 @@
                                     <small class="text-muted">
                                         APIR: ${item.apir || 'N/A'} 
                                         ${item.tcr !== null ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
+                                        ${item.sector ? '| Sector: ' + item.sector : ''}
                                     </small>
                                     <div class="mt-2 d-flex flex-wrap">
                                         ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
@@ -655,13 +875,14 @@
                 }).join('');
             }
             
-            document.getElementById('searchResultsSection').style.display = 'block';
+            resultsSection.style.display = 'block';
         }
         
         // Add investment to portfolio
         function addToPortfolio(investment, portfolioType) {
             const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
             
+            // Check if already exists
             const exists = portfolio.some(item => item.apir === investment.apir);
             if (exists) {
                 alert('This investment is already in the ' + portfolioType + ' portfolio');
@@ -707,7 +928,7 @@
             
             // Update table
             tbody.innerHTML = portfolio.map((item, index) => {
-                const sourceIcon = item.status === 'Morningstar Live' ? '<i class="bi bi-globe text-danger"></i>' : '<i class="bi bi-file-earmark-spreadsheet text-secondary"></i>';
+                const sourceIcon = item.status === 'Morningstar Live' || item.status === 'Morningstar Data' ? '<i class="bi bi-globe text-danger" title="Morningstar Live"></i>' : '<i class="bi bi-file-earmark-spreadsheet text-secondary" title="CSV Data"></i>';
                 
                 return `
                     <tr>
@@ -732,6 +953,7 @@
                 averageEl.className = avgFiveYears >= 0 ? 'text-success' : 'text-danger';
             } else {
                 averageEl.textContent = 'N/A';
+                averageEl.className = '';
             }
             
             if (avgTCR !== null) {
@@ -762,12 +984,14 @@
             }
         }
         
-        // Update summary
+        // Update summary and comparison
         function updateSummary() {
             const summarySection = document.getElementById('summarySection');
+            const comparisonSection = document.getElementById('comparisonSection');
             
             if (currentPortfolio.length === 0 && proposedPortfolio.length === 0) {
                 summarySection.style.display = 'none';
+                comparisonSection.style.display = 'none';
                 return;
             }
             
@@ -779,9 +1003,20 @@
             
             if (currentPortfolio.length > 0) {
                 const avgPerf = calculateAveragePerformance(currentPortfolio);
+                const validTCR = currentPortfolio.filter(item => item.tcr !== null);
+                const avgTCR = validTCR.length > 0 
+                    ? validTCR.reduce((sum, item) => sum + item.tcr, 0) / validTCR.length 
+                    : null;
+                
                 currentSummary.innerHTML = `
-                    <div>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</div>
-                    <div>Count: ${currentPortfolio.length} investments</div>
+                    <div>3 Months: ${avgPerf.threeMonths !== null ? avgPerf.threeMonths.toFixed(2) + '%' : 'N/A'}</div>
+                    <div>1 Year: ${avgPerf.oneYear !== null ? avgPerf.oneYear.toFixed(2) + '%' : 'N/A'}</div>
+                    <div>3 Years: ${avgPerf.threeYears !== null ? avgPerf.threeYears.toFixed(2) + '%' : 'N/A'}</div>
+                    <div><strong>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</strong></div>
+                    <div>10 Years: ${avgPerf.tenYears !== null ? avgPerf.tenYears.toFixed(2) + '%' : 'N/A'}</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">
+                        Average TCR: ${avgTCR !== null ? avgTCR.toFixed(2) + '%' : 'N/A'}
+                    </div>
                 `;
             } else {
                 currentSummary.innerHTML = 'No investments selected';
@@ -789,12 +1024,40 @@
             
             if (proposedPortfolio.length > 0) {
                 const avgPerf = calculateAveragePerformance(proposedPortfolio);
+                const validTCR = proposedPortfolio.filter(item => item.tcr !== null);
+                const avgTCR = validTCR.length > 0 
+                    ? validTCR.reduce((sum, item) => sum + item.tcr, 0) / validTCR.length 
+                    : null;
+                
                 proposedSummary.innerHTML = `
-                    <div>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</div>
-                    <div>Count: ${proposedPortfolio.length} investments</div>
+                    <div>3 Months: ${avgPerf.threeMonths !== null ? avgPerf.threeMonths.toFixed(2) + '%' : 'N/A'}</div>
+                    <div>1 Year: ${avgPerf.oneYear !== null ? avgPerf.oneYear.toFixed(2) + '%' : 'N/A'}</div>
+                    <div>3 Years: ${avgPerf.threeYears !== null ? avgPerf.threeYears.toFixed(2) + '%' : 'N/A'}</div>
+                    <div><strong>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</strong></div>
+                    <div>10 Years: ${avgPerf.tenYears !== null ? avgPerf.tenYears.toFixed(2) + '%' : 'N/A'}</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">
+                        Average TCR: ${avgTCR !== null ? avgTCR.toFixed(2) + '%' : 'N/A'}
+                    </div>
                 `;
             } else {
                 proposedSummary.innerHTML = 'No investments selected';
+            }
+            
+            // Update comparison chart
+            if (currentPortfolio.length > 0 || proposedPortfolio.length > 0) {
+                comparisonSection.style.display = 'block';
+                // Small delay to ensure DOM is ready and visible
+                setTimeout(() => {
+                    if (document.getElementById('comparisonSection').style.display !== 'none') {
+                        updateComparisonChart();
+                    }
+                }, 100);
+            } else {
+                comparisonSection.style.display = 'none';
+                if (comparisonChart) {
+                    comparisonChart.destroy();
+                    comparisonChart = null;
+                }
             }
         }
         
@@ -807,8 +1070,153 @@
             };
             
             return {
-                fiveYears: calculateAvg('fiveYears')
+                threeMonths: calculateAvg('threeMonths'),
+                oneYear: calculateAvg('oneYear'),
+                threeYears: calculateAvg('threeYears'),
+                fiveYears: calculateAvg('fiveYears'),
+                tenYears: calculateAvg('tenYears')
             };
+        }
+        
+        // Update comparison chart
+        function updateComparisonChart() {
+            const canvas = document.getElementById('comparisonChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Clear the canvas before creating a new chart
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const currentAvg = calculateAveragePerformance(currentPortfolio);
+            const proposedAvg = calculateAveragePerformance(proposedPortfolio);
+            
+            const data = {
+                labels: ['3 Months', '1 Year', '3 Years', '5 Years', '10 Years'],
+                datasets: []
+            };
+            
+            if (currentPortfolio.length > 0) {
+                data.datasets.push({
+                    label: 'Current Portfolio',
+                    data: [
+                        currentAvg.threeMonths || 0,
+                        currentAvg.oneYear || 0,
+                        currentAvg.threeYears || 0,
+                        currentAvg.fiveYears || 0,
+                        currentAvg.tenYears || 0
+                    ],
+                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2,
+                    borderRadius: 10
+                });
+            }
+            
+            if (proposedPortfolio.length > 0) {
+                data.datasets.push({
+                    label: 'Proposed Portfolio',
+                    data: [
+                        proposedAvg.threeMonths || 0,
+                        proposedAvg.oneYear || 0,
+                        proposedAvg.threeYears || 0,
+                        proposedAvg.fiveYears || 0,
+                        proposedAvg.tenYears || 0
+                    ],
+                    backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                    borderColor: 'rgba(39, 174, 96, 1)',
+                    borderWidth: 2,
+                    borderRadius: 10
+                });
+            }
+            
+            if (comparisonChart) {
+                comparisonChart.destroy();
+                comparisonChart = null;
+            }
+            
+            // Ensure the canvas has dimensions before creating the chart
+            const container = canvas.parentElement;
+            if (container.offsetWidth === 0 || container.offsetHeight === 0) {
+                console.warn('Chart container has no dimensions, skipping chart creation');
+                return;
+            }
+            
+            console.log('Creating comparison chart with dimensions:', container.offsetWidth, 'x', container.offsetHeight);
+            
+            comparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 10,
+                            top: 10,
+                            bottom: 10
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                stepSize: 5
+                            },
+                            grid: {
+                                display: true,
+                                drawBorder: false,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 0,
+                                minRotation: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'center',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + '%';
+                                }
+                            },
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true
+                        }
+                    },
+                    animation: {
+                        duration: 500
+                    }
+                }
+            });
         }
         
         // Handle Enter key in search inputs
@@ -822,6 +1230,17 @@
 
         document.getElementById('morningstarTerm').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') performMorningstarSearch();
+        });
+        
+        // Handle window resize for chart
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (comparisonChart && document.getElementById('comparisonChart')) {
+                    comparisonChart.resize();
+                }
+            }, 250);
         });
     </script>
 </body>
