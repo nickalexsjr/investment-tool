@@ -504,12 +504,12 @@
                     <i class="bi bi-info-circle"></i> <strong>Australian Search:</strong> This searches morningstar.com.au specifically for Australian funds with proper APIR codes and ASX stocks.
                 </div>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="search-box">
-                            <input type="text" id="australiaName" placeholder="🔍 Search by name...">
+                            <input type="text" id="australiaName" placeholder="🔍 Search by fund name...">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="search-box">
                             <input type="text" id="australiaCode" placeholder="🔍 Search by APIR/ASX code...">
                         </div>
@@ -521,11 +521,9 @@
                             <option value="stocks">ASX Stocks</option>
                         </select>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12 d-flex align-items-center">
-                        <button class="morningstar-btn w-100" onclick="performAustralianSearch()">
-                            <i class="bi bi-search"></i> Search Australian Morningstar Data
+                    <div class="col-md-2 d-flex align-items-center">
+                        <button class="search-btn w-100" onclick="performAustralianSearch()">
+                            <i class="bi bi-search"></i> Search
                         </button>
                     </div>
                 </div>
@@ -537,12 +535,12 @@
                     <i class="bi bi-globe"></i> <strong>Global Search:</strong> This searches all global markets. Results may have different identifier formats depending on the market.
                 </div>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="search-box">
-                            <input type="text" id="globalName" placeholder="🔍 Search by name...">
+                            <input type="text" id="globalName" placeholder="🔍 Search by fund name...">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="search-box">
                             <input type="text" id="globalCode" placeholder="🔍 Search by code/ID...">
                         </div>
@@ -554,11 +552,9 @@
                             <option value="stocks">Stocks Only</option>
                         </select>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12 d-flex align-items-center">
-                        <button class="morningstar-btn w-100" onclick="performGlobalSearch()">
-                            <i class="bi bi-search"></i> Search Global Morningstar Data
+                    <div class="col-md-2 d-flex align-items-center">
+                        <button class="search-btn w-100" onclick="performGlobalSearch()">
+                            <i class="bi bi-search"></i> Search
                         </button>
                     </div>
                 </div>
@@ -733,8 +729,10 @@
             
             if (tab === 'csv') {
                 document.getElementById('csvSearch').classList.add('active');
-            } else {
-                document.getElementById('morningstarSearch').classList.add('active');
+            } else if (tab === 'australia') {
+                document.getElementById('australiaSearch').classList.add('active');
+            } else if (tab === 'global') {
+                document.getElementById('globalSearch').classList.add('active');
             }
             
             // Clear previous results
@@ -856,11 +854,14 @@
             displaySearchResults(results, 'CSV Data');
         }
 
-        // Perform Morningstar search
-        async function performMorningstarSearch() {
-            const nameQuery = document.getElementById('morningstarName').value.trim();
-            const codeQuery = document.getElementById('morningstarCode').value.trim();
-            const searchType = document.getElementById('searchType').value;
+        // Perform Australian Morningstar search
+        async function performAustralianSearch() {
+            console.log('performAustralianSearch called');
+            const nameQuery = document.getElementById('australiaName').value.trim();
+            const codeQuery = document.getElementById('australiaCode').value.trim();
+            const searchType = document.getElementById('australiaType').value;
+            
+            console.log('Australian Search inputs:', { nameQuery, codeQuery, searchType });
             
             if (!nameQuery && !codeQuery) {
                 alert('Please enter a search term (name or code)');
@@ -869,6 +870,61 @@
             
             // Combine name and code queries
             const term = [nameQuery, codeQuery].filter(t => t).join(' ');
+            console.log('Combined search term:', term);
+            
+            // Show loading
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Australian Morningstar...</div></div>';
+            document.getElementById('searchResultsSection').style.display = 'block';
+
+            try {
+                const params = new URLSearchParams({
+                    term: term,
+                    type: searchType,
+                    pageSize: '30'
+                });
+
+                const url = `${API_BASE_URL}/search/australia?${params}`;
+                console.log('Fetching URL:', url);
+
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log('Australian search response:', data);
+                
+                if (data.success) {
+                    displaySearchResults(data.results, 'Morningstar Australia');
+                } else {
+                    throw new Error(data.error || 'Search failed');
+                }
+                
+            } catch (error) {
+                console.error('Australian search error:', error);
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        Error searching Australian Morningstar: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Perform Global Morningstar search
+        async function performGlobalSearch() {
+            console.log('performGlobalSearch called');
+            const nameQuery = document.getElementById('globalName').value.trim();
+            const codeQuery = document.getElementById('globalCode').value.trim();
+            const searchType = document.getElementById('globalType').value;
+            
+            console.log('Global Search inputs:', { nameQuery, codeQuery, searchType });
+            
+            if (!nameQuery && !codeQuery) {
+                alert('Please enter a search term (name or code)');
+                return;
+            }
+            
+            // Combine name and code queries
+            const term = [nameQuery, codeQuery].filter(t => t).join(' ');
+            console.log('Combined search term:', term);
             
             // Show loading
             const resultsDiv = document.getElementById('searchResults');
@@ -890,8 +946,13 @@
                     pageSize: '30'
                 });
 
-                const response = await fetch(`${API_BASE_URL}/${endpoint}?${params}`);
+                const url = `${API_BASE_URL}/${endpoint}?${params}`;
+                console.log('Fetching URL:', url);
+
+                const response = await fetch(url);
                 const data = await response.json();
+                
+                console.log('Global search response:', data);
                 
                 if (data.success) {
                     displaySearchResults(data.results, 'Morningstar Global');
@@ -900,12 +961,28 @@
                 }
                 
             } catch (error) {
-                console.error('Morningstar search error:', error);
+                console.error('Global search error:', error);
                 resultsDiv.innerHTML = `
                     <div class="alert alert-danger">
-                        Error searching Morningstar: ${error.message}
+                        Error searching Global Morningstar: ${error.message}
                     </div>
                 `;
+            }
+        }
+
+        // Generic function to perform search based on active tab
+        function performActiveTabSearch() {
+            const activeTab = document.querySelector('.search-tab.active');
+            if (!activeTab) return;
+            
+            const tabText = activeTab.textContent.trim();
+            
+            if (tabText.includes('CSV')) {
+                performCSVSearch();
+            } else if (tabText.includes('Australia')) {
+                performAustralianSearch();
+            } else if (tabText.includes('Global')) {
+                performGlobalSearch();
             }
         }
         
@@ -918,11 +995,20 @@
                 resultsDiv.innerHTML = '<p class="text-muted text-center">No investments found</p>';
             } else {
                 resultsDiv.innerHTML = results.map(item => {
-                    const sourceClass = source === 'Morningstar Global' ? 'morningstar' : '';
-                    let badge = source === 'Morningstar Global' ? '<span class="badge bg-danger ms-2">Live</span>' : '<span class="badge bg-secondary ms-2">CSV</span>';
+                    const sourceClass = source.includes('Morningstar') ? 'morningstar' : '';
+                    let badge;
+                    
+                    // Different badges for different sources
+                    if (source === 'Morningstar Australia') {
+                        badge = '<span class="badge bg-success ms-2">🇦🇺 AU</span>';
+                    } else if (source === 'Morningstar Global') {
+                        badge = '<span class="badge bg-danger ms-2">🌍 Global</span>';
+                    } else {
+                        badge = '<span class="badge bg-secondary ms-2">CSV</span>';
+                    }
                     
                     // Add country badge for global results
-                    if (item.country) {
+                    if (item.country && source !== 'CSV Data') {
                         const countryCode = item.country.toLowerCase().substring(0, 2);
                         badge += `<span class="country-badge ${countryCode}">${item.country}</span>`;
                     }
@@ -1018,9 +1104,14 @@
             
             // Update table
             tbody.innerHTML = portfolio.map((item, index) => {
-                const sourceIcon = item.status === 'Morningstar Global' || item.status === 'Morningstar Data' ? 
-                    '<i class="bi bi-globe text-danger" title="Morningstar Global"></i>' : 
-                    '<i class="bi bi-file-earmark-spreadsheet text-secondary" title="CSV Data"></i>';
+                let sourceIcon;
+                if (item.status === 'Morningstar Data' || item.source === 'Morningstar Australia') {
+                    sourceIcon = '<i class="bi bi-flag text-success" title="Morningstar Australia"></i>';
+                } else if (item.status === 'Morningstar Global' || item.source === 'Morningstar Global') {
+                    sourceIcon = '<i class="bi bi-globe text-danger" title="Morningstar Global"></i>';
+                } else {
+                    sourceIcon = '<i class="bi bi-file-earmark-spreadsheet text-secondary" title="CSV Data"></i>';
+                }
                 
                 const countryBadge = item.country ? `<small class="country-badge">${item.country}</small>` : '';
                 
@@ -1322,12 +1413,20 @@
             if (e.key === 'Enter') performCSVSearch();
         });
 
-        document.getElementById('morningstarName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performMorningstarSearch();
+        document.getElementById('australiaName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performAustralianSearch();
         });
 
-        document.getElementById('morningstarCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performMorningstarSearch();
+        document.getElementById('australiaCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performAustralianSearch();
+        });
+
+        document.getElementById('globalName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performGlobalSearch();
+        });
+
+        document.getElementById('globalCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performGlobalSearch();
         });
         
         // Handle window resize for chart
