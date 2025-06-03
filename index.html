@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Performance Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .search-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            padding: 5px;
+        }
+
+        .search-tab {
+            flex: 1;
+            padding: 10px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .search-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-section {
+            display: none;
+        }
+
+        .search-section.active {
+            display: block;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 50px;
+            font-size: 16px;
+            background: #f8f9fa;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .morningstar-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .investment-result {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .investment-result.morningstar {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .performance-pill {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 3px;
+        }
+
+        .performance-positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .performance-negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .portfolio-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .portfolio-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .portfolio-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .portfolio-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .btn-add-current {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .btn-add-proposed {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .btn-remove {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .btn-clear {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .api-status {
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .api-status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .api-status.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #6c757d;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1><i class="bi bi-graph-up"></i> Investment Performance Tool</h1>
+        
+        <!-- Search Section -->
+        <div class="glass-card">
+            <h4 class="mb-4"><i class="bi bi-search"></i> Search Investments</h4>
+            
+            <!-- Search Tabs -->
+            <div class="search-tabs">
+                <button class="search-tab active" onclick="switchSearchTab('csv')">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> CSV Data
+                </button>
+                <button class="search-tab" onclick="switchSearchTab('morningstar')">
+                    <i class="bi bi-globe"></i> Morningstar Live
+                </button>
+            </div>
+
+            <!-- API Status -->
+            <div id="apiStatus" class="api-status offline" style="display: none;">
+                <i class="bi bi-exclamation-triangle"></i> Morningstar API is offline.
+            </div>
+            
+            <!-- CSV Search Section -->
+            <div id="csvSearch" class="search-section active">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="search-box">
+                            <input type="text" id="nameSearch" placeholder="🔍 Search by investment name...">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="search-box">
+                            <input type="text" id="apirSearch" placeholder="🔍 Search by APIR code...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="search-btn w-100" onclick="performCSVSearch()">
+                            Search CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Morningstar Search Section -->
+            <div id="morningstarSearch" class="search-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="search-box">
+                            <input type="text" id="morningstarTerm" placeholder="🔍 Search Morningstar...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select id="searchType" class="form-select">
+                            <option value="funds">Funds</option>
+                            <option value="stocks">Stocks</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select id="countrySelect" class="form-select">
+                            <option value="au">Australia</option>
+                            <option value="us">United States</option>
+                            <option value="uk">United Kingdom</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="morningstar-btn w-100" onclick="performMorningstarSearch()">
+                            <i class="bi bi-search"></i> Search Morningstar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Results -->
+            <div class="mt-4" id="searchResultsSection" style="display: none;">
+                <h5 class="mb-3">Search Results</h5>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+
+        <!-- Performance Summary -->
+        <div class="summary-box" id="summarySection" style="display: none;">
+            <h4><i class="bi bi-bar-chart-line"></i> Performance Summary</h4>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-folder2"></i> Current Portfolio</h5>
+                    <div id="currentSummary">No investments selected</div>
+                </div>
+                <div class="col-md-6">
+                    <h5><i class="bi bi-folder2-open"></i> Proposed Portfolio</h5>
+                    <div id="proposedSummary">No investments selected</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Sections -->
+        <div class="row">
+            <!-- Current Portfolio -->
+            <div class="col-lg-6 mb-4">
+                <div class="portfolio-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="bi bi-briefcase"></i> Current Portfolio</h4>
+                        <button class="btn-clear" onclick="clearPortfolio('current')">
+                            <i class="bi bi-trash"></i> Clear
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="portfolio-table">
+                            <thead>
+                                <tr>
+                                    <th>Investment</th>
+                                    <th>APIR</th>
+                                    <th>5 Years</th>
+                                    <th>TCR</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="currentPortfolioBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state">
+                                        <i class="bi bi-inbox"></i>
+                                        <div>No investments added</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #f8f9fa;">
+                                    <td colspan="2"><strong>Average</strong></td>
+                                    <td><strong id="currentAverage">-</strong></td>
+                                    <td><strong id="currentTCRAverage">-</strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proposed Portfolio -->
+            <div class="col-lg-6 mb-4">
+                <div class="portfolio-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="bi bi-lightbulb"></i> Proposed Portfolio</h4>
+                        <button class="btn-clear" onclick="clearPortfolio('proposed')">
+                            <i class="bi bi-trash"></i> Clear
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="portfolio-table">
+                            <thead>
+                                <tr>
+                                    <th>Investment</th>
+                                    <th>APIR</th>
+                                    <th>5 Years</th>
+                                    <th>TCR</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="proposedPortfolioBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state">
+                                        <i class="bi bi-inbox"></i>
+                                        <div>No investments added</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #f8f9fa;">
+                                    <td colspan="2"><strong>Average</strong></td>
+                                    <td><strong id="proposedAverage">-</strong></td>
+                                    <td><strong id="proposedTCRAverage">-</strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Chart -->
+        <div class="chart-container" id="comparisonSection" style="display: none;">
+            <h4 class="mb-4"><i class="bi bi-graph-up-arrow"></i> Performance Comparison</h4>
+            <div style="position: relative; height: 400px;">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <i class="bi bi-arrow-repeat"></i>
+            <div>Loading investment data...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    
+    <script>
+        // Global variables
+        let investmentsData = [];
+        let currentPortfolio = [];
+        let proposedPortfolio = [];
+        let comparisonChart = null;
+        
+        // CHANGE THIS LINE TO YOUR PYTHONANYWHERE URL:
+        const API_BASE_URL = 'https://yourusername.pythonanywhere.com/api';
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCSVData();
+            checkAPIStatus();
+        });
+
+        // Check if Morningstar API is available
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    document.getElementById('apiStatus').className = 'api-status online';
+                    document.getElementById('apiStatus').innerHTML = '<i class="bi bi-check-circle"></i> Morningstar API is online!';
+                    document.getElementById('apiStatus').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('apiStatus').className = 'api-status offline';
+                document.getElementById('apiStatus').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Morningstar API is offline.';
+                document.getElementById('apiStatus').style.display = 'block';
+            }
+        }
+
+        // Switch between search tabs
+        function switchSearchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.search-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update search sections
+            document.querySelectorAll('.search-section').forEach(section => section.classList.remove('active'));
+            
+            if (tab === 'csv') {
+                document.getElementById('csvSearch').classList.add('active');
+            } else {
+                document.getElementById('morningstarSearch').classList.add('active');
+            }
+            
+            // Clear previous results
+            document.getElementById('searchResultsSection').style.display = 'none';
+        }
+        
+        // Load CSV data
+        function loadCSVData() {
+            fetch('./2025(in).csv')
+                .then(response => response.text())
+                .then(data => {
+                    parseCSV(data);
+                    document.getElementById('loadingState').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error loading CSV:', error);
+                    document.getElementById('loadingState').innerHTML = `
+                        <i class="bi bi-exclamation-circle text-danger"></i>
+                        <div class="text-danger">Error loading CSV data.</div>
+                    `;
+                });
+        }
+        
+        // Parse CSV data
+        function parseCSV(csvData) {
+            Papa.parse(csvData, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processData(results.data);
+                }
+            });
+        }
+        
+        // Process the data
+        function processData(data) {
+            investmentsData = data.map(row => {
+                const parsePerformance = (value) => {
+                    if (!value || value === '' || value === 'N/A') return null;
+                    const parsed = parseFloat(value);
+                    return isNaN(parsed) ? null : parsed;
+                };
+                
+                return {
+                    apir: row['APIR CODE'] || '',
+                    name: row['INVESTMENT NAME'] || '',
+                    threeMonths: parsePerformance(row['3 Months']),
+                    oneYear: parsePerformance(row['1 Year']),
+                    threeYears: parsePerformance(row['3 Years p.a']),
+                    fiveYears: parsePerformance(row['5 Years p.a']),
+                    tenYears: parsePerformance(row['10 Years p.a']),
+                    tcr: parsePerformance(row['TCR']),
+                    status: 'CSV Data'
+                };
+            }).filter(item => item.name && item.name.trim() !== '');
+            
+            console.log('Loaded', investmentsData.length, 'investments from CSV');
+        }
+        
+        // Perform CSV search
+        function performCSVSearch() {
+            const nameQuery = document.getElementById('nameSearch').value.toLowerCase().trim();
+            const apirQuery = document.getElementById('apirSearch').value.toLowerCase().trim();
+            
+            if (!nameQuery && !apirQuery) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            let results = investmentsData.filter(item => {
+                const nameMatch = nameQuery && item.name.toLowerCase().includes(nameQuery);
+                const apirMatch = apirQuery && item.apir.toLowerCase().includes(apirQuery);
+                return nameMatch || apirMatch;
+            });
+            
+            displaySearchResults(results, 'CSV Data');
+        }
+
+        // Perform Morningstar search
+        async function performMorningstarSearch() {
+            const term = document.getElementById('morningstarTerm').value.trim();
+            const searchType = document.getElementById('searchType').value;
+            const country = document.getElementById('countrySelect').value;
+            
+            if (!term) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            // Show loading
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Morningstar...</div></div>';
+            document.getElementById('searchResultsSection').style.display = 'block';
+
+            try {
+                const endpoint = searchType === 'funds' ? 'search/funds' : 'search/stocks';
+                const params = new URLSearchParams({
+                    term: term,
+                    country: country,
+                    pageSize: '20'
+                });
+
+                const response = await fetch(`${API_BASE_URL}/${endpoint}?${params}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displaySearchResults(data.results, 'Morningstar Live');
+                } else {
+                    throw new Error(data.error || 'Search failed');
+                }
+                
+            } catch (error) {
+                console.error('Morningstar search error:', error);
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        Error searching Morningstar: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Display search results
+        function displaySearchResults(results, source) {
+            const resultsDiv = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p class="text-muted text-center">No investments found</p>';
+            } else {
+                resultsDiv.innerHTML = results.map(item => {
+                    const sourceClass = source === 'Morningstar Live' ? 'morningstar' : '';
+                    const badge = source === 'Morningstar Live' ? '<span class="badge bg-danger ms-2">Live</span>' : '<span class="badge bg-secondary ms-2">CSV</span>';
+                    
+                    return `
+                        <div class="investment-result ${sourceClass}">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div>
+                                    <h6 class="mb-2">${item.name} ${badge}</h6>
+                                    <small class="text-muted">
+                                        APIR: ${item.apir || 'N/A'} 
+                                        ${item.tcr !== null ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
+                                    </small>
+                                    <div class="mt-2 d-flex flex-wrap">
+                                        ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
+                                        ${item.oneYear !== null ? `<span class="performance-pill ${item.oneYear >= 0 ? 'performance-positive' : 'performance-negative'}">1Y: ${item.oneYear.toFixed(2)}%</span>` : ''}
+                                        ${item.threeYears !== null ? `<span class="performance-pill ${item.threeYears >= 0 ? 'performance-positive' : 'performance-negative'}">3Y: ${item.threeYears.toFixed(2)}%</span>` : ''}
+                                        ${item.fiveYears !== null ? `<span class="performance-pill ${item.fiveYears >= 0 ? 'performance-positive' : 'performance-negative'}"><strong>5Y: ${item.fiveYears.toFixed(2)}%</strong></span>` : ''}
+                                        ${item.tenYears !== null ? `<span class="performance-pill ${item.tenYears >= 0 ? 'performance-positive' : 'performance-negative'}">10Y: ${item.tenYears.toFixed(2)}%</span>` : ''}
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn-add-current" onclick='addToPortfolio(${JSON.stringify(item).replace(/'/g, "&apos;")}, "current")'>
+                                        <i class="bi bi-plus-circle"></i> Current
+                                    </button>
+                                    <button class="btn-add-proposed" onclick='addToPortfolio(${JSON.stringify(item).replace(/'/g, "&apos;")}, "proposed")'>
+                                        <i class="bi bi-plus-circle"></i> Proposed
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            document.getElementById('searchResultsSection').style.display = 'block';
+        }
+        
+        // Add investment to portfolio
+        function addToPortfolio(investment, portfolioType) {
+            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
+            
+            const exists = portfolio.some(item => item.apir === investment.apir);
+            if (exists) {
+                alert('This investment is already in the ' + portfolioType + ' portfolio');
+                return;
+            }
+            
+            portfolio.push(investment);
+            updatePortfolioDisplay(portfolioType);
+            updateSummary();
+        }
+        
+        // Update portfolio display
+        function updatePortfolioDisplay(portfolioType) {
+            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
+            const tbody = document.getElementById(portfolioType + 'PortfolioBody');
+            const averageEl = document.getElementById(portfolioType + 'Average');
+            const tcrAverageEl = document.getElementById(portfolioType + 'TCRAverage');
+            
+            if (portfolio.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <div>No investments added</div>
+                        </td>
+                    </tr>
+                `;
+                averageEl.textContent = '-';
+                tcrAverageEl.textContent = '-';
+                return;
+            }
+            
+            // Calculate averages
+            const validInvestments = portfolio.filter(item => item.fiveYears !== null);
+            const avgFiveYears = validInvestments.length > 0 
+                ? validInvestments.reduce((sum, item) => sum + item.fiveYears, 0) / validInvestments.length 
+                : null;
+            
+            const validTCRInvestments = portfolio.filter(item => item.tcr !== null);
+            const avgTCR = validTCRInvestments.length > 0 
+                ? validTCRInvestments.reduce((sum, item) => sum + item.tcr, 0) / validTCRInvestments.length 
+                : null;
+            
+            // Update table
+            tbody.innerHTML = portfolio.map((item, index) => {
+                const sourceIcon = item.status === 'Morningstar Live' ? '<i class="bi bi-globe text-danger"></i>' : '<i class="bi bi-file-earmark-spreadsheet text-secondary"></i>';
+                
+                return `
+                    <tr>
+                        <td>${sourceIcon} ${item.name}</td>
+                        <td>${item.apir || 'N/A'}</td>
+                        <td class="${item.fiveYears >= 0 ? 'text-success' : 'text-danger'}">
+                            <strong>${item.fiveYears !== null ? item.fiveYears.toFixed(2) + '%' : 'N/A'}</strong>
+                        </td>
+                        <td>${item.tcr !== null ? item.tcr.toFixed(2) + '%' : 'N/A'}</td>
+                        <td>
+                            <button class="btn-remove" onclick="removeFromPortfolio(${index}, '${portfolioType}')">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update averages
+            if (avgFiveYears !== null) {
+                averageEl.textContent = avgFiveYears.toFixed(2) + '%';
+                averageEl.className = avgFiveYears >= 0 ? 'text-success' : 'text-danger';
+            } else {
+                averageEl.textContent = 'N/A';
+            }
+            
+            if (avgTCR !== null) {
+                tcrAverageEl.textContent = avgTCR.toFixed(2) + '%';
+            } else {
+                tcrAverageEl.textContent = 'N/A';
+            }
+        }
+        
+        // Remove investment from portfolio
+        function removeFromPortfolio(index, portfolioType) {
+            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
+            portfolio.splice(index, 1);
+            updatePortfolioDisplay(portfolioType);
+            updateSummary();
+        }
+        
+        // Clear portfolio
+        function clearPortfolio(portfolioType) {
+            if (confirm('Are you sure you want to clear the ' + portfolioType + ' portfolio?')) {
+                if (portfolioType === 'current') {
+                    currentPortfolio = [];
+                } else {
+                    proposedPortfolio = [];
+                }
+                updatePortfolioDisplay(portfolioType);
+                updateSummary();
+            }
+        }
+        
+        // Update summary
+        function updateSummary() {
+            const summarySection = document.getElementById('summarySection');
+            
+            if (currentPortfolio.length === 0 && proposedPortfolio.length === 0) {
+                summarySection.style.display = 'none';
+                return;
+            }
+            
+            summarySection.style.display = 'block';
+            
+            // Update summary text
+            const currentSummary = document.getElementById('currentSummary');
+            const proposedSummary = document.getElementById('proposedSummary');
+            
+            if (currentPortfolio.length > 0) {
+                const avgPerf = calculateAveragePerformance(currentPortfolio);
+                currentSummary.innerHTML = `
+                    <div>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</div>
+                    <div>Count: ${currentPortfolio.length} investments</div>
+                `;
+            } else {
+                currentSummary.innerHTML = 'No investments selected';
+            }
+            
+            if (proposedPortfolio.length > 0) {
+                const avgPerf = calculateAveragePerformance(proposedPortfolio);
+                proposedSummary.innerHTML = `
+                    <div>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</div>
+                    <div>Count: ${proposedPortfolio.length} investments</div>
+                `;
+            } else {
+                proposedSummary.innerHTML = 'No investments selected';
+            }
+        }
+        
+        // Calculate average performance
+        function calculateAveragePerformance(portfolio) {
+            const calculateAvg = (field) => {
+                const validItems = portfolio.filter(item => item[field] !== null);
+                if (validItems.length === 0) return null;
+                return validItems.reduce((sum, item) => sum + item[field], 0) / validItems.length;
+            };
+            
+            return {
+                fiveYears: calculateAvg('fiveYears')
+            };
+        }
+        
+        // Handle Enter key in search inputs
+        document.getElementById('nameSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performCSVSearch();
+        });
+        
+        document.getElementById('apirSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performCSVSearch();
+        });
+
+        document.getElementById('morningstarTerm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performMorningstarSearch();
+        });
+    </script>
+</body>
+</html>
