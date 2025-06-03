@@ -1,1485 +1,1102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Investment Performance Tool</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden !important;
-        }
-
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            overflow-x: hidden;
-        }
-
-        h1 {
-            color: #2c3e50;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 25px;
-            margin-bottom: 25px;
-            transition: transform 0.3s ease;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
-        }
-
-        .search-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            background: #f8f9fa;
-            padding: 5px;
-        }
-
-        .search-tab {
-            flex: 1;
-            padding: 10px 20px;
-            text-align: center;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .search-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
-        }
-
-        .search-section {
-            display: none;
-        }
-
-        .search-section.active {
-            display: block;
-        }
-
-        .search-box {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #e1e8ed;
-            border-radius: 50px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #3498db;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
-        }
-
-        .search-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .morningstar-btn {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-        }
-
-        .morningstar-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-        }
-
-        .investment-result {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .investment-result:hover {
-            background: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .investment-result.morningstar {
-            border-left: 4px solid #e74c3c;
-        }
-
-        .performance-pill {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin: 3px;
-            white-space: nowrap;
-        }
-
-        .performance-positive {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .performance-negative {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .portfolio-section {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .portfolio-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .portfolio-header h4 {
-            margin: 0;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .portfolio-current .portfolio-header {
-            border-bottom-color: #3498db;
-        }
-
-        .portfolio-proposed .portfolio-header {
-            border-bottom-color: #27ae60;
-        }
-
-        .btn-clear {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-clear:hover {
-            background: #c0392b;
-            transform: scale(1.05);
-        }
-
-        .btn-add-current {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 5px;
-        }
-
-        .btn-add-proposed {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-add-current:hover, .btn-add-proposed:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .portfolio-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .portfolio-table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .portfolio-table td {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            max-width: 300px;
-        }
-
-        .portfolio-table tbody tr:hover {
-            background: #f8f9fa;
-        }
-
-        .btn-remove {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-remove:hover {
-            background: #c0392b;
-            transform: scale(1.1);
-        }
-
-        .summary-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .summary-item h5 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            opacity: 0.9;
-        }
-
-        .summary-item div {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .summary-item strong {
-            font-size: 20px;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            max-width: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #comparisonChart {
-            max-width: 100% !important;
-            height: 100% !important;
-            position: relative !important;
-        }
-
-        .api-status {
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .api-status.online {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .api-status.offline {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #6c757d;
-        }
-
-        .loading i {
-            font-size: 3rem;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            opacity: 0.5;
-        }
-
-        .country-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-            background: #e9ecef;
-            color: #495057;
-        }
-
-        .country-badge.au {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .country-badge.us {
-            background: #cce5ff;
-            color: #004085;
-        }
-
-        .country-badge.uk {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        @media (max-width: 768px) {
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .chart-container {
-                padding: 15px;
-            }
-            
-            .chart-container > div {
-                height: 300px !important;
-                max-height: 300px !important;
-            }
-
-            .search-tabs {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="main-container">
-        <h1><i class="bi bi-globe"></i> Global Investment Performance Tool</h1>
-        
-        <!-- Search Section -->
-        <div class="glass-card">
-            <h4 class="mb-4"><i class="bi bi-search"></i> Search Global Investments</h4>
-            
-            <!-- Search Tabs -->
-            <div class="search-tabs">
-                <button class="search-tab active" onclick="switchSearchTab('csv')">
-                    <i class="bi bi-file-earmark-spreadsheet"></i> CSV Data
-                </button>
-                <button class="search-tab" onclick="switchSearchTab('australia')">
-                    <i class="bi bi-flag"></i> Australia (APIR)
-                </button>
-                <button class="search-tab" onclick="switchSearchTab('global')">
-                    <i class="bi bi-globe"></i> Global Markets
-                </button>
-            </div>
-
-            <!-- API Status -->
-            <div id="apiStatus" class="api-status offline" style="display: none;">
-                <i class="bi bi-exclamation-triangle"></i> Morningstar API is offline.
-            </div>
-            
-            <!-- CSV Search Section -->
-            <div id="csvSearch" class="search-section active">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="search-box">
-                            <input type="text" id="nameSearch" placeholder="🔍 Search by investment name...">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="search-box">
-                            <input type="text" id="apirSearch" placeholder="🔍 Search by APIR/ID code...">
-                        </div>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-center">
-                        <button class="search-btn w-100" onclick="performCSVSearch()">
-                            Search CSV
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Morningstar Australian Search Section -->
-            <div id="australiaSearch" class="search-section">
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> <strong>Australian Search:</strong> This searches morningstar.com.au specifically for Australian funds with proper APIR codes and ASX stocks.
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="search-box">
-                            <input type="text" id="australiaName" placeholder="🔍 Search by fund name...">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="search-box">
-                            <input type="text" id="australiaCode" placeholder="🔍 Search by APIR/ASX code...">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <select id="australiaType" class="form-select" style="padding: 12px; border-radius: 50px;">
-                            <option value="combined">All Types</option>
-                            <option value="funds">Funds Only</option>
-                            <option value="stocks">ASX Stocks</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-center">
-                        <button class="search-btn w-100" onclick="performAustralianSearch()">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Morningstar Global Search Section -->
-            <div id="globalSearch" class="search-section">
-                <div class="alert alert-warning">
-                    <i class="bi bi-globe"></i> <strong>Global Search:</strong> This searches all global markets. Results may have different identifier formats depending on the market.
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="search-box">
-                            <input type="text" id="globalName" placeholder="🔍 Search by fund name...">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="search-box">
-                            <input type="text" id="globalCode" placeholder="🔍 Search by code/ID...">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <select id="globalType" class="form-select" style="padding: 12px; border-radius: 50px;">
-                            <option value="combined">All Types</option>
-                            <option value="funds">Funds Only</option>
-                            <option value="stocks">Stocks Only</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-center">
-                        <button class="search-btn w-100" onclick="performGlobalSearch()">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Search Results -->
-            <div class="mt-4" id="searchResultsSection" style="display: none; max-width: 100%; overflow: hidden;">
-                <h5 class="mb-3">Search Results</h5>
-                <div id="searchResults" style="max-width: 100%; overflow-x: auto;"></div>
-            </div>
-        </div>
-
-        <!-- Performance Summary -->
-        <div class="summary-box" id="summarySection" style="display: none;">
-            <h4><i class="bi bi-bar-chart-line"></i> Performance Summary</h4>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <h5><i class="bi bi-folder2"></i> Current Portfolio</h5>
-                    <div id="currentSummary">No investments selected</div>
-                </div>
-                <div class="summary-item">
-                    <h5><i class="bi bi-folder2-open"></i> Proposed Portfolio</h5>
-                    <div id="proposedSummary">No investments selected</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Portfolio Sections -->
-        <div class="row">
-            <!-- Current Portfolio -->
-            <div class="col-lg-6 mb-4">
-                <div class="portfolio-section portfolio-current">
-                    <div class="portfolio-header">
-                        <h4><i class="bi bi-briefcase"></i> Current Portfolio</h4>
-                        <button class="btn-clear" onclick="clearPortfolio('current')">
-                            <i class="bi bi-trash"></i> Clear
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="portfolio-table">
-                            <thead>
-                                <tr>
-                                    <th>Investment</th>
-                                    <th>Code</th>
-                                    <th>5 Years</th>
-                                    <th>TCR</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="currentPortfolioBody">
-                                <tr>
-                                    <td colspan="5" class="empty-state">
-                                        <i class="bi bi-inbox"></i>
-                                        <div>No investments added</div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr style="background: #f8f9fa;">
-                                    <td colspan="2"><strong>Average</strong></td>
-                                    <td><strong id="currentAverage">-</strong></td>
-                                    <td><strong id="currentTCRAverage">-</strong></td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Proposed Portfolio -->
-            <div class="col-lg-6 mb-4">
-                <div class="portfolio-section portfolio-proposed">
-                    <div class="portfolio-header">
-                        <h4><i class="bi bi-lightbulb"></i> Proposed Portfolio</h4>
-                        <button class="btn-clear" onclick="clearPortfolio('proposed')">
-                            <i class="bi bi-trash"></i> Clear
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="portfolio-table">
-                            <thead>
-                                <tr>
-                                    <th>Investment</th>
-                                    <th>Code</th>
-                                    <th>5 Years</th>
-                                    <th>TCR</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="proposedPortfolioBody">
-                                <tr>
-                                    <td colspan="5" class="empty-state">
-                                        <i class="bi bi-inbox"></i>
-                                        <div>No investments added</div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr style="background: #f8f9fa;">
-                                    <td colspan="2"><strong>Average</strong></td>
-                                    <td><strong id="proposedAverage">-</strong></td>
-                                    <td><strong id="proposedTCRAverage">-</strong></td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Comparison Chart -->
-        <div class="chart-container" id="comparisonSection" style="display: none;">
-            <h4 class="mb-4"><i class="bi bi-graph-up-arrow"></i> Performance Comparison</h4>
-            <div style="position: relative; height: 400px; max-height: 400px; overflow: hidden;">
-                <canvas id="comparisonChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Loading State -->
-        <div class="loading" id="loadingState">
-            <i class="bi bi-arrow-repeat"></i>
-            <div>Loading investment data...</div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import mstarpy
+import pandas as pd
+from datetime import datetime, timedelta
+import os
+
+app = Flask(__name__)
+CORS(app)  # Enable CORS for frontend requests
+
+def is_genuine_australian_investment(item, formatted_item):
+    """Check if this is genuinely an Australian investment with proper codes"""
     
-    <script>
-        // Global variables
-        let investmentsData = [];
-        let currentPortfolio = [];
-        let proposedPortfolio = [];
-        let comparisonChart = null;
+    # Check for proper APIR code format
+    apir_code = formatted_item.get('apir', '')
+    if apir_code:
+        # Australian APIR codes typically end with 'AU' and are 8-9 characters
+        if apir_code.upper().endswith('AU') and len(apir_code) >= 8:
+            print(f"✓ Valid APIR code found: {apir_code}")
+            return True
         
-        // CHANGE THIS TO YOUR RENDER URL:
-        const API_BASE_URL = 'https://investment-tool-9gxo.onrender.com/api';
-        
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCSVData();
-            checkAPIStatus();
-        });
+        # Some may have different formats but still be Australian
+        if any(x in apir_code.upper() for x in ['TGP', 'ANZ', 'CBA', 'WBC', 'NAB']) and 'AU' in apir_code.upper():
+            print(f"✓ Recognized Australian fund code: {apir_code}")
+            return True
+    
+    # Check for proper Australian exchange
+    exchange = formatted_item.get('exchange', '').upper()
+    if exchange in ['XASX', 'ASX', 'AORD']:
+        print(f"✓ Australian exchange found: {exchange}")
+        return True
+    
+    # Check for explicit Australian country marking
+    country = formatted_item.get('country', '').lower()
+    if 'australia' in country:
+        print(f"✓ Australian country found: {country}")
+        return True
+    
+    # Check for AUD currency
+    currency = formatted_item.get('currency', '').upper()
+    fund_name = formatted_item.get('name', '').lower()
+    
+    # If it has AUD currency AND mentions Australia in the name
+    if currency == 'AUD' and any(x in fund_name for x in ['australia', 'aussie', 'asx']):
+        print(f"✓ AUD currency with Australian name: {fund_name}")
+        return True
+    
+    # Reject obvious non-Australian codes
+    if apir_code and (
+        apir_code.startswith('F0000') or  # Morningstar internal codes
+        'XXX' in apir_code or 
+        len(apir_code) > 12 or  # Too long for APIR
+        any(x in exchange for x in ['$
 
-        // Check if Morningstar API is available
-        async function checkAPIStatus() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/health`);
-                if (response.ok) {
-                    document.getElementById('apiStatus').className = 'api-status online';
-                    document.getElementById('apiStatus').innerHTML = '<i class="bi bi-check-circle"></i> Global Morningstar API is online!';
-                    document.getElementById('apiStatus').style.display = 'block';
+@app.route('/api/search/funds', methods=['GET'])
+def search_funds():
+    """Search for funds globally using Morningstar data"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        country = request.args.get('country', None)  # Optional country parameter
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        # Comprehensive field list to get all available data
+        fields = [
+            "Name", 
+            "fundShareClassId",
+            "SecId",
+            "Ticker", 
+            "TenforeId",
+            "GBRReturnM3",   # 3 months
+            "GBRReturnM12",  # 1 year  
+            "GBRReturnM36",  # 3 years
+            "GBRReturnM60",  # 5 years
+            "GBRReturnM120", # 10 years
+            "ongoingCharge", # TCR/Management fees
+            "globalAssetClassId",
+            "LargestSector",
+            "MarketCountryName",
+            "currency",
+            "ExchangeId",
+            "CategoryName",
+            "FeeLevel",
+            "starRating"
+        ]
+        
+        # Search with optional country restriction
+        search_params = {
+            'term': term,
+            'field': fields,
+            'pageSize': page_size * 2
+        }
+        
+        if country:
+            search_params['country'] = country
+            if country.lower() == 'au':
+                search_params['currency'] = 'AUD'
+        
+        response = mstarpy.search_funds(**search_params)
+        
+        # Format the response
+        formatted_results = []
+        for item in response:
+            try:
+                formatted_item = format_investment_data(item)
+                # Only include if we have a valid identifier and name
+                if formatted_item['apir'] and formatted_item['name']:
+                    formatted_results.append(formatted_item)
+            except Exception as e:
+                print(f"Error formatting item: {e}")
+                continue
+        
+        # Limit to requested page size
+        final_results = formatted_results[:page_size]
+        
+        return jsonify({
+            'success': True,
+            'results': final_results,
+            'count': len(final_results),
+            'total_found': len(formatted_results),
+            'country': country
+        })
+        
+    except Exception as e:
+        print(f"Error in search_funds: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/search/stocks', methods=['GET'])
+def search_stocks():
+    """Search for stocks globally using Morningstar data"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        country = request.args.get('country', None)  # Optional country parameter
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        # Comprehensive field list for stocks
+        fields = [
+            "Name", 
+            "fundShareClassId",
+            "SecId",
+            "Ticker",
+            "TenforeId",
+            "GBRReturnM3",   # 3 months
+            "GBRReturnM12",  # 1 year
+            "GBRReturnM36",  # 3 years  
+            "GBRReturnM60",  # 5 years
+            "GBRReturnM120", # 10 years
+            "SectorName",
+            "IndustryName",
+            "ExchangeId",
+            "MarketCountryName",
+            "currency",
+            "ClosePrice",
+            "MarketCap",
+            "PERatio"
+        ]
+        
+        # Search with optional country restriction
+        search_params = {
+            'term': term,
+            'field': fields,
+            'pageSize': page_size * 2
+        }
+        
+        if country:
+            if country.lower() == 'au':
+                search_params['exchange'] = 'XASX'  # Australian Securities Exchange
+            # For other countries, we could add more exchange mappings
+        
+        response = mstarpy.search_stock(**search_params)
+        
+        # Format the response
+        formatted_results = []
+        for item in response:
+            try:
+                formatted_item = format_investment_data(item)
+                formatted_item['tcr'] = None  # Stocks don't have ongoing charges
+                # Only include if we have a valid identifier and name
+                if formatted_item['apir'] and formatted_item['name']:
+                    formatted_results.append(formatted_item)
+            except Exception as e:
+                print(f"Error formatting stock item: {e}")
+                continue
+        
+        # Limit results
+        final_results = formatted_results[:page_size]
+        
+        return jsonify({
+            'success': True, 
+            'results': final_results,
+            'count': len(final_results),
+            'total_found': len(formatted_results),
+            'country': country
+        })
+        
+    except Exception as e:
+        print(f"Error in search_stocks: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/search/australia', methods=['GET'])
+def search_australia():
+    """Search specifically in Australian Morningstar data with multiple strategies"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        search_type = request.args.get('type', 'combined')
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        print(f"=== AUSTRALIAN SEARCH: {term} ===")
+        
+        all_results = []
+        
+        # Search Australian funds with multiple strategies
+        if search_type in ['funds', 'combined']:
+            print(f"Searching Australian funds...")
+            
+            # Strategy 1: Direct Australian search
+            fund_results = []
+            
+            # Try multiple search approaches
+            search_strategies = [
+                # Strategy 1: Direct AU country search
+                {
+                    'country': 'au',
+                    'currency': 'AUD',
+                    'name': 'Direct AU search'
+                },
+                # Strategy 2: AUD currency only
+                {
+                    'currency': 'AUD',
+                    'name': 'AUD currency search'
+                },
+                # Strategy 3: No restrictions (global search, filter later)
+                {
+                    'name': 'Global search (filter later)'
                 }
-            } catch (error) {
-                document.getElementById('apiStatus').className = 'api-status offline';
-                document.getElementById('apiStatus').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Morningstar API is offline.';
-                document.getElementById('apiStatus').style.display = 'block';
-            }
-        }
-
-        // Switch between search tabs
-        function switchSearchTab(tab) {
-            // Update tab buttons
-            document.querySelectorAll('.search-tab').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            ]
             
-            // Update search sections
-            document.querySelectorAll('.search-section').forEach(section => section.classList.remove('active'));
+            enhanced_fields = [
+                "Name", "FundName", "SecurityName", "LegalName",
+                "fundShareClassId", "SecId", "Ticker", "TenforeId", 
+                "APIR", "apir", "ApirCode", "APIR_Code", "FundId", "InvestmentId", "Code", "Symbol",
+                "isin", "ISIN", "PermID",
+                "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                "ReturnM3", "ReturnM12", "ReturnM36", "ReturnM60", "ReturnM120",
+                "ongoingCharge", "ManagementFee", "ExpenseRatio", "TotalExpenseRatio", "AnnualReportExpenseRatio",
+                "globalAssetClassId", "AssetClass", "LargestSector", "SectorName", "Sector",
+                "MarketCountryName", "Country", "DomicileCountry", "LegalDomicile",
+                "currency", "Currency", "BaseCurrency", "ExchangeId", "Exchange", 
+                "CategoryName", "FeeLevel", "starRating", "MorningstarRating",
+                "FundSize", "TotalAssets", "NetAssets", "AUM"
+            ]
             
-            if (tab === 'csv') {
-                document.getElementById('csvSearch').classList.add('active');
-            } else if (tab === 'australia') {
-                document.getElementById('australiaSearch').classList.add('active');
-            } else if (tab === 'global') {
-                document.getElementById('globalSearch').classList.add('active');
-            }
-            
-            // Clear previous results
-            document.getElementById('searchResultsSection').style.display = 'none';
-        }
-        
-        // Load CSV data
-        function loadCSVData() {
-            fetch('./2025(in).csv')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to load CSV file');
+            for strategy in search_strategies:
+                try:
+                    print(f"Trying strategy: {strategy['name']}")
+                    
+                    search_params = {
+                        'term': term,
+                        'field': enhanced_fields,
+                        'pageSize': 100  # Get more results for filtering
                     }
-                    return response.text();
-                })
-                .then(data => {
-                    parseCSV(data);
-                    document.getElementById('loadingState').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error loading CSV:', error);
-                    document.getElementById('loadingState').innerHTML = `
-                        <i class="bi bi-exclamation-circle text-danger"></i>
-                        <div class="text-danger">Error loading investment data. Please ensure 2025(in).csv is in the same directory.</div>
-                    `;
-                });
-        }
-        
-        // Parse CSV data
-        function parseCSV(csvData) {
-            Papa.parse(csvData, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    // Check if the CSV has headers or if we need to assign them
-                    if (results.data.length > 0) {
-                        const firstRow = results.data[0];
-                        const keys = Object.keys(firstRow);
+                    
+                    # Add strategy-specific parameters
+                    if 'country' in strategy:
+                        search_params['country'] = strategy['country']
+                    if 'currency' in strategy:
+                        search_params['currency'] = strategy['currency']
+                    
+                    strategy_results = mstarpy.search_funds(**search_params)
+                    print(f"Strategy '{strategy['name']}' returned {len(strategy_results)} results")
+                    
+                    # Process and validate results
+                    for item in strategy_results:
+                        try:
+                            formatted_item = format_investment_data(item)
+                            if formatted_item['name'] and is_australian_investment(item, formatted_item):
+                                formatted_item['type'] = 'Fund'
+                                formatted_item['source'] = 'Morningstar Australia'
+                                formatted_item['search_strategy'] = strategy['name']
+                                fund_results.append(formatted_item)
+                        except Exception as e:
+                            continue
+                    
+                    # If we got good results from this strategy, we can break
+                    if len(fund_results) >= 10:
+                        print(f"Got sufficient results from strategy: {strategy['name']}")
+                        break
                         
-                        // If the first column doesn't look like "APIR CODE", assume no headers
-                        if (!keys.includes('APIR CODE') && !keys.includes('INVESTMENT NAME')) {
-                            // Parse without headers and assign them manually
-                            Papa.parse(csvData, {
-                                header: false,
-                                skipEmptyLines: true,
-                                complete: function(resultsNoHeader) {
-                                    // Skip the first row if it contains headers
-                                    const dataRows = resultsNoHeader.data;
-                                    const startIndex = (dataRows[0] && dataRows[0][0] === 'APIR CODE') ? 1 : 0;
-                                    
-                                    const processedData = dataRows.slice(startIndex).map(row => ({
-                                        'APIR CODE': row[0] || '',
-                                        'INVESTMENT NAME': row[1] || '',
-                                        '3 Months': row[2] || '',
-                                        '1 Year': row[3] || '',
-                                        '3 Years p.a': row[4] || '',
-                                        '5 Years p.a': row[5] || '',
-                                        '10 Years p.a': row[6] || '',
-                                        'TCR': row[7] || ''
-                                    }));
-                                    
-                                    processData(processedData);
-                                }
-                            });
-                        } else {
-                            processData(results.data);
-                        }
-                    }
-                }
-            });
-        }
+                except Exception as e:
+                    print(f"Error with strategy '{strategy['name']}': {e}")
+                    continue
+            
+            all_results.extend(fund_results)
+            print(f"Total fund results after all strategies: {len(fund_results)}")
         
-        // Process the data with correct column mappings
-        function processData(data) {
-            investmentsData = data.map(row => {
-                // Parse performance values
-                const parsePerformance = (value) => {
-                    if (!value || value === '' || value === 'N/A') return null;
-                    const parsed = parseFloat(value);
-                    return isNaN(parsed) ? null : parsed;
-                };
-                
-                return {
-                    apir: row['APIR CODE'] || '',
-                    name: row['INVESTMENT NAME'] || '',
-                    threeMonths: parsePerformance(row['3 Months']),
-                    oneYear: parsePerformance(row['1 Year']),
-                    threeYears: parsePerformance(row['3 Years p.a']),
-                    fiveYears: parsePerformance(row['5 Years p.a']),
-                    tenYears: parsePerformance(row['10 Years p.a']),
-                    tcr: parsePerformance(row['TCR']),
-                    assetClass: 'Domestic Equity',
-                    sector: '',
-                    status: 'CSV Data',
-                    country: 'Australia',
-                    type: 'Fund'
-                };
-            }).filter(item => item.name && item.name.trim() !== '' && item.apir && item.apir.trim() !== '');
+        # Search Australian stocks (ASX)
+        if search_type in ['stocks', 'combined']:
+            print(f"Searching ASX stocks...")
             
-            console.log('Loaded', investmentsData.length, 'investments');
-        }
-        
-        // Perform CSV search
-        function performCSVSearch() {
-            const nameQuery = document.getElementById('nameSearch').value.toLowerCase().trim();
-            const apirQuery = document.getElementById('apirSearch').value.toLowerCase().trim();
+            stock_results = []
             
-            if (!nameQuery && !apirQuery) {
-                alert('Please enter a search term');
-                return;
-            }
-            
-            let results = investmentsData.filter(item => {
-                const nameMatch = nameQuery && item.name.toLowerCase().includes(nameQuery);
-                const apirMatch = apirQuery && item.apir.toLowerCase().includes(apirQuery);
-                return nameMatch || apirMatch;
-            });
-            
-            displaySearchResults(results, 'CSV Data');
-        }
-
-        // Perform Australian Morningstar search
-        async function performAustralianSearch() {
-            console.log('performAustralianSearch called');
-            const nameQuery = document.getElementById('australiaName').value.trim();
-            const codeQuery = document.getElementById('australiaCode').value.trim();
-            const searchType = document.getElementById('australiaType').value;
-            
-            console.log('Australian Search inputs:', { nameQuery, codeQuery, searchType });
-            
-            if (!nameQuery && !codeQuery) {
-                alert('Please enter a search term (name or code)');
-                return;
-            }
-            
-            // Combine name and code queries
-            const term = [nameQuery, codeQuery].filter(t => t).join(' ');
-            console.log('Combined search term:', term);
-            
-            // Show loading
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Australian Morningstar...</div></div>';
-            document.getElementById('searchResultsSection').style.display = 'block';
-
-            try {
-                const params = new URLSearchParams({
-                    term: term,
-                    type: searchType,
-                    pageSize: '30'
-                });
-
-                const url = `${API_BASE_URL}/search/australia?${params}`;
-                console.log('Fetching URL:', url);
-
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                console.log('Australian search response:', data);
-                
-                if (data.success) {
-                    displaySearchResults(data.results, 'Morningstar Australia');
-                } else {
-                    throw new Error(data.error || 'Search failed');
+            # ASX search strategies
+            stock_strategies = [
+                # Strategy 1: Direct ASX exchange search
+                {
+                    'exchange': 'XASX',
+                    'name': 'XASX exchange search'
+                },
+                # Strategy 2: Alternative ASX search
+                {
+                    'exchange': 'ASX',
+                    'name': 'ASX exchange search'
+                },
+                # Strategy 3: AUD currency stocks
+                {
+                    'currency': 'AUD',
+                    'name': 'AUD stocks search'
                 }
-                
-            } catch (error) {
-                console.error('Australian search error:', error);
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        Error searching Australian Morningstar: ${error.message}
-                    </div>
-                `;
-            }
-        }
-
-        // Perform Global Morningstar search
-        async function performGlobalSearch() {
-            console.log('performGlobalSearch called');
-            const nameQuery = document.getElementById('globalName').value.trim();
-            const codeQuery = document.getElementById('globalCode').value.trim();
-            const searchType = document.getElementById('globalType').value;
+            ]
             
-            console.log('Global Search inputs:', { nameQuery, codeQuery, searchType });
+            stock_fields = [
+                "Name", "SecurityName", "CompanyName",
+                "fundShareClassId", "SecId", "Ticker", "TenforeId", "Symbol", "Code",
+                "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                "ReturnM3", "ReturnM12", "ReturnM36", "ReturnM60", "ReturnM120",
+                "SectorName", "IndustryName", "Sector", "Industry",
+                "ExchangeId", "Exchange", "MarketCountryName", "Country", 
+                "currency", "Currency", "ClosePrice", "LastPrice",
+                "MarketCap", "MarketCapitalization", "PERatio", "PE"
+            ]
             
-            if (!nameQuery && !codeQuery) {
-                alert('Please enter a search term (name or code)');
-                return;
-            }
-            
-            // Combine name and code queries
-            const term = [nameQuery, codeQuery].filter(t => t).join(' ');
-            console.log('Combined search term:', term);
-            
-            // Show loading
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Global Morningstar...</div></div>';
-            document.getElementById('searchResultsSection').style.display = 'block';
-
-            try {
-                let endpoint;
-                if (searchType === 'combined') {
-                    endpoint = 'search/combined';
-                } else if (searchType === 'funds') {
-                    endpoint = 'search/funds';
-                } else {
-                    endpoint = 'search/stocks';
-                }
-                
-                const params = new URLSearchParams({
-                    term: term,
-                    pageSize: '30'
-                });
-
-                const url = `${API_BASE_URL}/${endpoint}?${params}`;
-                console.log('Fetching URL:', url);
-
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                console.log('Global search response:', data);
-                
-                if (data.success) {
-                    displaySearchResults(data.results, 'Morningstar Global');
-                } else {
-                    throw new Error(data.error || 'Search failed');
-                }
-                
-            } catch (error) {
-                console.error('Global search error:', error);
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        Error searching Global Morningstar: ${error.message}
-                    </div>
-                `;
-            }
-        }
-
-        // Generic function to perform search based on active tab
-        function performActiveTabSearch() {
-            const activeTab = document.querySelector('.search-tab.active');
-            if (!activeTab) return;
-            
-            const tabText = activeTab.textContent.trim();
-            
-            if (tabText.includes('CSV')) {
-                performCSVSearch();
-            } else if (tabText.includes('Australia')) {
-                performAustralianSearch();
-            } else if (tabText.includes('Global')) {
-                performGlobalSearch();
-            }
-        }
-        
-        // Display search results
-        function displaySearchResults(results, source) {
-            const resultsDiv = document.getElementById('searchResults');
-            const resultsSection = document.getElementById('searchResultsSection');
-            
-            console.log('Displaying results:', results, 'Source:', source);
-            
-            if (results.length === 0) {
-                resultsDiv.innerHTML = '<p class="text-muted text-center">No investments found</p>';
-            } else {
-                resultsDiv.innerHTML = results.map(item => {
-                    const sourceClass = source.includes('Morningstar') ? 'morningstar' : '';
-                    let badge;
+            for strategy in stock_strategies:
+                try:
+                    print(f"Trying stock strategy: {strategy['name']}")
                     
-                    // Different badges for different sources
-                    if (source === 'Morningstar Australia') {
-                        badge = '<span class="badge bg-success ms-2">🇦🇺 AU</span>';
-                    } else if (source === 'Morningstar Global') {
-                        badge = '<span class="badge bg-danger ms-2">🌍 Global</span>';
-                    } else {
-                        badge = '<span class="badge bg-secondary ms-2">CSV</span>';
+                    search_params = {
+                        'term': term,
+                        'field': stock_fields,
+                        'pageSize': 100
                     }
                     
-                    // Add country badge for global results
-                    if (item.country && source !== 'CSV Data') {
-                        const countryCode = item.country.toLowerCase().substring(0, 2);
-                        badge += `<span class="country-badge ${countryCode}">${item.country}</span>`;
-                    }
+                    # Add strategy-specific parameters
+                    if 'exchange' in strategy:
+                        search_params['exchange'] = strategy['exchange']
+                    if 'currency' in strategy:
+                        search_params['currency'] = strategy['currency']
                     
-                    // Add type badge if available
-                    if (item.type) {
-                        badge += `<span class="badge bg-info ms-1">${item.type}</span>`;
-                    }
+                    strategy_results = mstarpy.search_stock(**search_params)
+                    print(f"Stock strategy '{strategy['name']}' returned {len(strategy_results)} results")
                     
-                    // Show more debugging info for APIR codes
-                    const codeDisplay = item.apir || 'N/A';
-                    let codeClass = '';
-                    if (item.apir && item.apir.toUpperCase().includes('AU')) {
-                        codeClass = 'text-success fw-bold';
-                    }
+                    for item in strategy_results:
+                        try:
+                            formatted_item = format_investment_data(item)
+                            formatted_item['tcr'] = None  # Stocks don't have ongoing charges
+                            if formatted_item['name'] and is_australian_investment(item, formatted_item):
+                                formatted_item['type'] = 'Stock'
+                                formatted_item['source'] = 'ASX via Morningstar Australia'
+                                formatted_item['search_strategy'] = strategy['name']
+                                stock_results.append(formatted_item)
+                        except Exception as e:
+                            continue
                     
-                    return `
-                        <div class="investment-result ${sourceClass}">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                <div>
-                                    <h6 class="mb-2">${item.name} ${badge}</h6>
-                                    <small class="text-muted">
-                                        Code: <span class="${codeClass}">${codeDisplay}</span>
-                                        ${item.tcr !== null ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
-                                        ${item.sector ? '| Sector: ' + item.sector : ''}
-                                        ${item.exchange ? '| Exchange: ' + item.exchange : ''}
-                                    </small>
-                                    <div class="mt-2 d-flex flex-wrap">
-                                        ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
-                                        ${item.oneYear !== null ? `<span class="performance-pill ${item.oneYear >= 0 ? 'performance-positive' : 'performance-negative'}">1Y: ${item.oneYear.toFixed(2)}%</span>` : ''}
-                                        ${item.threeYears !== null ? `<span class="performance-pill ${item.threeYears >= 0 ? 'performance-positive' : 'performance-negative'}">3Y: ${item.threeYears.toFixed(2)}%</span>` : ''}
-                                        ${item.fiveYears !== null ? `<span class="performance-pill ${item.fiveYears >= 0 ? 'performance-positive' : 'performance-negative'}"><strong>5Y: ${item.fiveYears.toFixed(2)}%</strong></span>` : ''}
-                                        ${item.tenYears !== null ? `<span class="performance-pill ${item.tenYears >= 0 ? 'performance-positive' : 'performance-negative'}">10Y: ${item.tenYears.toFixed(2)}%</span>` : ''}
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn-add-current" onclick='addToPortfolio(${JSON.stringify(item).replace(/'/g, "&apos;")}, "current")'>
-                                        <i class="bi bi-plus-circle"></i> Current
-                                    </button>
-                                    <button class="btn-add-proposed" onclick='addToPortfolio(${JSON.stringify(item).replace(/'/g, "&apos;")}, "proposed")'>
-                                        <i class="bi bi-plus-circle"></i> Proposed
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
+                    if len(stock_results) >= 5:
+                        print(f"Got sufficient stock results from strategy: {strategy['name']}")
+                        break
+                        
+                except Exception as e:
+                    print(f"Error with stock strategy '{strategy['name']}': {e}")
+                    continue
             
-            resultsSection.style.display = 'block';
-        }
+            all_results.extend(stock_results)
+            print(f"Total stock results: {len(stock_results)}")
+        
+        # Remove duplicates while preserving order
+        unique_results = []
+        seen = set()
+        
+        for result in all_results:
+            # Create a unique key based on name and code
+            key = (result['name'].lower().strip(), result.get('apir', '').upper().strip())
+            if key not in seen and key[0]:  # Ensure name is not empty
+                seen.add(key)
+                unique_results.append(result)
+        
+        print(f"=== FINAL RESULTS ===")
+        print(f"Total unique Australian results: {len(unique_results)}")
+        
+        return jsonify({
+            'success': True,
+            'results': unique_results[:page_size],
+            'count': len(unique_results[:page_size]),
+            'total_found': len(unique_results),
+            'country': 'Australia',
+            'source': 'Morningstar Australia - Multiple Strategies',
+            'debug': {
+                'raw_results_count': len(all_results),
+                'unique_results_count': len(unique_results),
+                'search_term': term,
+                'search_type': search_type
+            }
+        })
+        
+    except Exception as e:
+        print(f"Error in search_australia: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
 
-        // Test function for debugging specific searches
-        async function testSearch(term = 'TGP0034') {
-            try {
-                console.log(`Testing search for: ${term}`);
-                const response = await fetch(`${API_BASE_URL}/test/search?term=${term}`);
-                const data = await response.json();
-                console.log('Test search result:', data);
-                return data;
-            } catch (error) {
-                console.error('Test search error:', error);
-                return null;
-            }
-        }
-
-        // Add a test button to the page (for debugging)
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add test button after loading
-            setTimeout(() => {
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    const testBtn = document.createElement('button');
-                    testBtn.innerHTML = 'Test TGP0034 Search';
-                    testBtn.className = 'btn btn-warning btn-sm';
-                    testBtn.style.position = 'fixed';
-                    testBtn.style.top = '10px';
-                    testBtn.style.right = '10px';
-                    testBtn.style.zIndex = '9999';
-                    testBtn.onclick = () => testSearch('TGP0034');
-                    document.body.appendChild(testBtn);
-                }
-            }, 2000);
-        });
+@app.route('/api/search/combined', methods=['GET'])
+def search_combined():
+    """Search for both funds and stocks with a single term"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        country = request.args.get('country', None)  # Optional country parameter
         
-        // Add investment to portfolio
-        function addToPortfolio(investment, portfolioType) {
-            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
-            
-            // Check if already exists
-            const exists = portfolio.some(item => item.apir === investment.apir);
-            if (exists) {
-                alert('This investment is already in the ' + portfolioType + ' portfolio');
-                return;
-            }
-            
-            portfolio.push(investment);
-            updatePortfolioDisplay(portfolioType);
-            updateSummary();
-        }
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
         
-        // Update portfolio display
-        function updatePortfolioDisplay(portfolioType) {
-            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
-            const tbody = document.getElementById(portfolioType + 'PortfolioBody');
-            const averageEl = document.getElementById(portfolioType + 'Average');
-            const tcrAverageEl = document.getElementById(portfolioType + 'TCRAverage');
-            
-            if (portfolio.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            <i class="bi bi-inbox"></i>
-                            <div>No investments added</div>
-                        </td>
-                    </tr>
-                `;
-                averageEl.textContent = '-';
-                tcrAverageEl.textContent = '-';
-                return;
-            }
-            
-            // Calculate averages
-            const validInvestments = portfolio.filter(item => item.fiveYears !== null);
-            const avgFiveYears = validInvestments.length > 0 
-                ? validInvestments.reduce((sum, item) => sum + item.fiveYears, 0) / validInvestments.length 
-                : null;
-            
-            const validTCRInvestments = portfolio.filter(item => item.tcr !== null);
-            const avgTCR = validTCRInvestments.length > 0 
-                ? validTCRInvestments.reduce((sum, item) => sum + item.tcr, 0) / validTCRInvestments.length 
-                : null;
-            
-            // Update table
-            tbody.innerHTML = portfolio.map((item, index) => {
-                let sourceIcon;
-                if (item.status === 'Morningstar Data' || item.source === 'Morningstar Australia') {
-                    sourceIcon = '<i class="bi bi-flag text-success" title="Morningstar Australia"></i>';
-                } else if (item.status === 'Morningstar Global' || item.source === 'Morningstar Global') {
-                    sourceIcon = '<i class="bi bi-globe text-danger" title="Morningstar Global"></i>';
-                } else {
-                    sourceIcon = '<i class="bi bi-file-earmark-spreadsheet text-secondary" title="CSV Data"></i>';
-                }
-                
-                const countryBadge = item.country ? `<small class="country-badge">${item.country}</small>` : '';
-                
-                return `
-                    <tr>
-                        <td>${sourceIcon} ${item.name} ${countryBadge}</td>
-                        <td>${item.apir || 'N/A'}</td>
-                        <td class="${item.fiveYears >= 0 ? 'text-success' : 'text-danger'}">
-                            <strong>${item.fiveYears !== null ? item.fiveYears.toFixed(2) + '%' : 'N/A'}</strong>
-                        </td>
-                        <td>${item.tcr !== null ? item.tcr.toFixed(2) + '%' : 'N/A'}</td>
-                        <td>
-                            <button class="btn-remove" onclick="removeFromPortfolio(${index}, '${portfolioType}')">
-                                <i class="bi bi-x"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-            
-            // Update averages
-            if (avgFiveYears !== null) {
-                averageEl.textContent = avgFiveYears.toFixed(2) + '%';
-                averageEl.className = avgFiveYears >= 0 ? 'text-success' : 'text-danger';
-            } else {
-                averageEl.textContent = 'N/A';
-                averageEl.className = '';
-            }
-            
-            if (avgTCR !== null) {
-                tcrAverageEl.textContent = avgTCR.toFixed(2) + '%';
-            } else {
-                tcrAverageEl.textContent = 'N/A';
-            }
-        }
+        all_results = []
         
-        // Remove investment from portfolio
-        function removeFromPortfolio(index, portfolioType) {
-            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
-            portfolio.splice(index, 1);
-            updatePortfolioDisplay(portfolioType);
-            updateSummary();
-        }
+        # Search funds first
+        try:
+            search_params = {
+                'term': term,
+                'field': [
+                    "Name", "fundShareClassId", "SecId", "Ticker", "TenforeId",
+                    "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                    "ongoingCharge", "globalAssetClassId", "LargestSector", "MarketCountryName", "currency", "ExchangeId"
+                ],
+                'pageSize': page_size
+            }
+            
+            if country:
+                search_params['country'] = country
+                if country.lower() == 'au':
+                    search_params['currency'] = 'AUD'
+            
+            funds_response = mstarpy.search_funds(**search_params)
+            
+            for item in funds_response:
+                try:
+                    formatted_item = format_investment_data(item)
+                    if formatted_item['apir'] and formatted_item['name']:
+                        formatted_item['type'] = 'Fund'
+                        all_results.append(formatted_item)
+                except:
+                    continue
+                    
+        except Exception as e:
+            print(f"Error searching funds: {e}")
         
-        // Clear portfolio
-        function clearPortfolio(portfolioType) {
-            if (confirm('Are you sure you want to clear the ' + portfolioType + ' portfolio?')) {
-                if (portfolioType === 'current') {
-                    currentPortfolio = [];
-                } else {
-                    proposedPortfolio = [];
-                }
-                updatePortfolioDisplay(portfolioType);
-                updateSummary();
-            }
-        }
-        
-        // Update summary and comparison
-        function updateSummary() {
-            const summarySection = document.getElementById('summarySection');
-            const comparisonSection = document.getElementById('comparisonSection');
-            
-            if (currentPortfolio.length === 0 && proposedPortfolio.length === 0) {
-                summarySection.style.display = 'none';
-                comparisonSection.style.display = 'none';
-                return;
-            }
-            
-            summarySection.style.display = 'block';
-            
-            // Update summary text
-            const currentSummary = document.getElementById('currentSummary');
-            const proposedSummary = document.getElementById('proposedSummary');
-            
-            if (currentPortfolio.length > 0) {
-                const avgPerf = calculateAveragePerformance(currentPortfolio);
-                const validTCR = currentPortfolio.filter(item => item.tcr !== null);
-                const avgTCR = validTCR.length > 0 
-                    ? validTCR.reduce((sum, item) => sum + item.tcr, 0) / validTCR.length 
-                    : null;
-                
-                currentSummary.innerHTML = `
-                    <div>3 Months: ${avgPerf.threeMonths !== null ? avgPerf.threeMonths.toFixed(2) + '%' : 'N/A'}</div>
-                    <div>1 Year: ${avgPerf.oneYear !== null ? avgPerf.oneYear.toFixed(2) + '%' : 'N/A'}</div>
-                    <div>3 Years: ${avgPerf.threeYears !== null ? avgPerf.threeYears.toFixed(2) + '%' : 'N/A'}</div>
-                    <div><strong>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</strong></div>
-                    <div>10 Years: ${avgPerf.tenYears !== null ? avgPerf.tenYears.toFixed(2) + '%' : 'N/A'}</div>
-                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">
-                        Average TCR: ${avgTCR !== null ? avgTCR.toFixed(2) + '%' : 'N/A'}
-                    </div>
-                `;
-            } else {
-                currentSummary.innerHTML = 'No investments selected';
-            }
-            
-            if (proposedPortfolio.length > 0) {
-                const avgPerf = calculateAveragePerformance(proposedPortfolio);
-                const validTCR = proposedPortfolio.filter(item => item.tcr !== null);
-                const avgTCR = validTCR.length > 0 
-                    ? validTCR.reduce((sum, item) => sum + item.tcr, 0) / validTCR.length 
-                    : null;
-                
-                proposedSummary.innerHTML = `
-                    <div>3 Months: ${avgPerf.threeMonths !== null ? avgPerf.threeMonths.toFixed(2) + '%' : 'N/A'}</div>
-                    <div>1 Year: ${avgPerf.oneYear !== null ? avgPerf.oneYear.toFixed(2) + '%' : 'N/A'}</div>
-                    <div>3 Years: ${avgPerf.threeYears !== null ? avgPerf.threeYears.toFixed(2) + '%' : 'N/A'}</div>
-                    <div><strong>5 Years: ${avgPerf.fiveYears !== null ? avgPerf.fiveYears.toFixed(2) + '%' : 'N/A'}</strong></div>
-                    <div>10 Years: ${avgPerf.tenYears !== null ? avgPerf.tenYears.toFixed(2) + '%' : 'N/A'}</div>
-                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">
-                        Average TCR: ${avgTCR !== null ? avgTCR.toFixed(2) + '%' : 'N/A'}
-                    </div>
-                `;
-            } else {
-                proposedSummary.innerHTML = 'No investments selected';
-            }
-            
-            // Update comparison chart
-            if (currentPortfolio.length > 0 || proposedPortfolio.length > 0) {
-                comparisonSection.style.display = 'block';
-                // Small delay to ensure DOM is ready and visible
-                setTimeout(() => {
-                    if (document.getElementById('comparisonSection').style.display !== 'none') {
-                        updateComparisonChart();
-                    }
-                }, 100);
-            } else {
-                comparisonSection.style.display = 'none';
-                if (comparisonChart) {
-                    comparisonChart.destroy();
-                    comparisonChart = null;
-                }
-            }
-        }
-        
-        // Calculate average performance
-        function calculateAveragePerformance(portfolio) {
-            const calculateAvg = (field) => {
-                const validItems = portfolio.filter(item => item[field] !== null);
-                if (validItems.length === 0) return null;
-                return validItems.reduce((sum, item) => sum + item[field], 0) / validItems.length;
-            };
-            
-            return {
-                threeMonths: calculateAvg('threeMonths'),
-                oneYear: calculateAvg('oneYear'),
-                threeYears: calculateAvg('threeYears'),
-                fiveYears: calculateAvg('fiveYears'),
-                tenYears: calculateAvg('tenYears')
-            };
-        }
-        
-        // Update comparison chart
-        function updateComparisonChart() {
-            const canvas = document.getElementById('comparisonChart');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Clear the canvas before creating a new chart
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const currentAvg = calculateAveragePerformance(currentPortfolio);
-            const proposedAvg = calculateAveragePerformance(proposedPortfolio);
-            
-            const data = {
-                labels: ['3 Months', '1 Year', '3 Years', '5 Years', '10 Years'],
-                datasets: []
-            };
-            
-            if (currentPortfolio.length > 0) {
-                data.datasets.push({
-                    label: 'Current Portfolio',
-                    data: [
-                        currentAvg.threeMonths || 0,
-                        currentAvg.oneYear || 0,
-                        currentAvg.threeYears || 0,
-                        currentAvg.fiveYears || 0,
-                        currentAvg.tenYears || 0
+        # Search stocks if we need more results
+        if len(all_results) < page_size:
+            try:
+                stock_search_params = {
+                    'term': term,
+                    'field': [
+                        "Name", "fundShareClassId", "SecId", "Ticker", "TenforeId",
+                        "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                        "SectorName", "IndustryName", "ExchangeId", "MarketCountryName", "currency"
                     ],
-                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
-                    borderColor: 'rgba(52, 152, 219, 1)',
-                    borderWidth: 2,
-                    borderRadius: 10
-                });
-            }
-            
-            if (proposedPortfolio.length > 0) {
-                data.datasets.push({
-                    label: 'Proposed Portfolio',
-                    data: [
-                        proposedAvg.threeMonths || 0,
-                        proposedAvg.oneYear || 0,
-                        proposedAvg.threeYears || 0,
-                        proposedAvg.fiveYears || 0,
-                        proposedAvg.tenYears || 0
-                    ],
-                    backgroundColor: 'rgba(39, 174, 96, 0.7)',
-                    borderColor: 'rgba(39, 174, 96, 1)',
-                    borderWidth: 2,
-                    borderRadius: 10
-                });
-            }
-            
-            if (comparisonChart) {
-                comparisonChart.destroy();
-                comparisonChart = null;
-            }
-            
-            // Ensure the canvas has dimensions before creating the chart
-            const container = canvas.parentElement;
-            if (container.offsetWidth === 0 || container.offsetHeight === 0) {
-                console.warn('Chart container has no dimensions, skipping chart creation');
-                return;
-            }
-            
-            console.log('Creating comparison chart with dimensions:', container.offsetWidth, 'x', container.offsetHeight);
-            
-            comparisonChart = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 10,
-                            top: 10,
-                            bottom: 10
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                },
-                                stepSize: 5
-                            },
-                            grid: {
-                                display: true,
-                                drawBorder: false,
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                maxRotation: 0,
-                                minRotation: 0
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'center',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + '%';
-                                }
-                            },
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            padding: 12,
-                            cornerRadius: 8,
-                            displayColors: true
-                        }
-                    },
-                    animation: {
-                        duration: 500
-                    }
+                    'pageSize': page_size - len(all_results)
                 }
-            });
+                
+                if country and country.lower() == 'au':
+                    stock_search_params['exchange'] = 'XASX'
+                
+                stocks_response = mstarpy.search_stock(**stock_search_params)
+                
+                for item in stocks_response:
+                    try:
+                        formatted_item = format_investment_data(item)
+                        formatted_item['tcr'] = None  # Stocks don't have ongoing charges
+                        if formatted_item['apir'] and formatted_item['name']:
+                            formatted_item['type'] = 'Stock'
+                            all_results.append(formatted_item)
+                    except:
+                        continue
+                        
+            except Exception as e:
+                print(f"Error searching stocks: {e}")
+        
+        return jsonify({
+            'success': True,
+            'results': all_results[:page_size],
+            'count': len(all_results[:page_size]),
+            'total_found': len(all_results),
+            'country': country
+        })
+        
+    except Exception as e:
+        print(f"Error in search_combined: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/test/search', methods=['GET'])
+def test_search():
+    """Test search endpoint to debug specific searches"""
+    try:
+        term = request.args.get('term', 'TGP0034')
+        
+        print(f"=== TEST SEARCH FOR: {term} ===")
+        
+        # Try multiple search strategies like the main function
+        strategies_tested = []
+        
+        try:
+            # Test Strategy 1: Direct AU search
+            print("Testing Strategy 1: Direct AU search")
+            response1 = mstarpy.search_funds(
+                term=term,
+                country="au",
+                currency="AUD",
+                pageSize=50
+            )
+            
+            processed1 = []
+            for item in response1:
+                formatted = format_investment_data(item)
+                is_valid = is_australian_investment(item, formatted)
+                processed1.append({
+                    'formatted': formatted,
+                    'is_valid_australian': is_valid
+                })
+            
+            strategies_tested.append({
+                'name': 'Direct AU search',
+                'raw_count': len(response1),
+                'valid_count': sum(1 for r in processed1 if r['is_valid_australian']),
+                'sample_results': processed1[:3]
+            })
+            
+            # Test Strategy 2: AUD currency only
+            print("Testing Strategy 2: AUD currency search")
+            response2 = mstarpy.search_funds(
+                term=term,
+                currency="AUD",
+                pageSize=50
+            )
+            
+            processed2 = []
+            for item in response2:
+                formatted = format_investment_data(item)
+                is_valid = is_australian_investment(item, formatted)
+                processed2.append({
+                    'formatted': formatted,
+                    'is_valid_australian': is_valid
+                })
+            
+            strategies_tested.append({
+                'name': 'AUD currency search',
+                'raw_count': len(response2),
+                'valid_count': sum(1 for r in processed2 if r['is_valid_australian']),
+                'sample_results': processed2[:3]
+            })
+            
+            # Test Strategy 3: Global search
+            print("Testing Strategy 3: Global search")
+            response3 = mstarpy.search_funds(
+                term=term,
+                pageSize=50
+            )
+            
+            processed3 = []
+            for item in response3:
+                formatted = format_investment_data(item)
+                is_valid = is_australian_investment(item, formatted)
+                processed3.append({
+                    'formatted': formatted,
+                    'is_valid_australian': is_valid
+                })
+            
+            strategies_tested.append({
+                'name': 'Global search',
+                'raw_count': len(response3),
+                'valid_count': sum(1 for r in processed3 if r['is_valid_australian']),
+                'sample_results': processed3[:3]
+            })
+            
+            return jsonify({
+                'success': True,
+                'term': term,
+                'strategies_tested': strategies_tested,
+                'summary': {
+                    'total_strategies': len(strategies_tested),
+                    'best_strategy': max(strategies_tested, key=lambda x: x['valid_count'])['name'],
+                    'total_valid_found': sum(s['valid_count'] for s in strategies_tested)
+                }
+            })
+            
+        except Exception as e:
+            print(f"Error in test search: {e}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({
+                'success': False,
+                'error': str(e),
+                'traceback': traceback.format_exc()
+            })
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
+    return jsonify({'status': 'healthy', 'message': 'Global Morningstar API is running'})
+
+@app.route('/')
+def home():
+    """Basic home route"""
+    return jsonify({
+        'message': 'Global Investment Performance API with Morningstar is running',
+        'status': 'live',
+        'coverage': 'Global markets (all regions and exchanges)',
+        'endpoints': [
+            '/api/health', 
+            '/api/search/funds', 
+            '/api/search/stocks', 
+            '/api/search/combined',
+            '/api/search/australia',
+            '/api/test/search'
+        ],
+        'country_support': {
+            'global': 'Search all markets globally',
+            'australia': 'Multi-strategy search for Australian investments (all APIR formats, AUD currency, ASX stocks)',
+            'other_countries': 'Add ?country=us, ?country=uk etc. to target specific countries',
+            'test': 'Use /api/test/search?term=XXXX to debug search strategies'
+        }
+    })
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    print("Starting Global Morningstar API server...")
+    app.run(debug=True, host='0.0.0.0', port=port), 'XXX', 'EX$$']) or  # Invalid exchanges
+        not apir_code.replace('0', '').replace('F', '')  # Only F's and 0's
+    ):
+        print(f"✗ Rejected non-Australian code: {apir_code}, exchange: {exchange}")
+        return False
+    
+    print(f"? Uncertain about: {apir_code}, exchange: {exchange}, country: {country}")
+    return False
+
+@app.route('/api/search/funds', methods=['GET'])
+def search_funds():
+    """Search for funds globally using Morningstar data"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        country = request.args.get('country', None)  # Optional country parameter
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        # Comprehensive field list to get all available data
+        fields = [
+            "Name", 
+            "fundShareClassId",
+            "SecId",
+            "Ticker", 
+            "TenforeId",
+            "GBRReturnM3",   # 3 months
+            "GBRReturnM12",  # 1 year  
+            "GBRReturnM36",  # 3 years
+            "GBRReturnM60",  # 5 years
+            "GBRReturnM120", # 10 years
+            "ongoingCharge", # TCR/Management fees
+            "globalAssetClassId",
+            "LargestSector",
+            "MarketCountryName",
+            "currency",
+            "ExchangeId",
+            "CategoryName",
+            "FeeLevel",
+            "starRating"
+        ]
+        
+        # Search with optional country restriction
+        search_params = {
+            'term': term,
+            'field': fields,
+            'pageSize': page_size * 2
         }
         
-        // Handle Enter key in search inputs
-        document.getElementById('nameSearch').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performCSVSearch();
-        });
+        if country:
+            search_params['country'] = country
+            if country.lower() == 'au':
+                search_params['currency'] = 'AUD'
         
-        document.getElementById('apirSearch').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performCSVSearch();
-        });
-
-        document.getElementById('australiaName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performAustralianSearch();
-        });
-
-        document.getElementById('australiaCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performAustralianSearch();
-        });
-
-        document.getElementById('globalName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performGlobalSearch();
-        });
-
-        document.getElementById('globalCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performGlobalSearch();
-        });
+        response = mstarpy.search_funds(**search_params)
         
-        // Handle window resize for chart
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(function() {
-                if (comparisonChart && document.getElementById('comparisonChart')) {
-                    comparisonChart.resize();
+        # Format the response
+        formatted_results = []
+        for item in response:
+            try:
+                formatted_item = format_investment_data(item)
+                # Only include if we have a valid identifier and name
+                if formatted_item['apir'] and formatted_item['name']:
+                    formatted_results.append(formatted_item)
+            except Exception as e:
+                print(f"Error formatting item: {e}")
+                continue
+        
+        # Limit to requested page size
+        final_results = formatted_results[:page_size]
+        
+        return jsonify({
+            'success': True,
+            'results': final_results,
+            'count': len(final_results),
+            'total_found': len(formatted_results),
+            'country': country
+        })
+        
+    except Exception as e:
+        print(f"Error in search_funds: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/search/stocks', methods=['GET'])
+def search_stocks():
+    """Search for stocks globally using Morningstar data"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        country = request.args.get('country', None)  # Optional country parameter
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        # Comprehensive field list for stocks
+        fields = [
+            "Name", 
+            "fundShareClassId",
+            "SecId",
+            "Ticker",
+            "TenforeId",
+            "GBRReturnM3",   # 3 months
+            "GBRReturnM12",  # 1 year
+            "GBRReturnM36",  # 3 years  
+            "GBRReturnM60",  # 5 years
+            "GBRReturnM120", # 10 years
+            "SectorName",
+            "IndustryName",
+            "ExchangeId",
+            "MarketCountryName",
+            "currency",
+            "ClosePrice",
+            "MarketCap",
+            "PERatio"
+        ]
+        
+        # Search with optional country restriction
+        search_params = {
+            'term': term,
+            'field': fields,
+            'pageSize': page_size * 2
+        }
+        
+        if country:
+            if country.lower() == 'au':
+                search_params['exchange'] = 'XASX'  # Australian Securities Exchange
+            # For other countries, we could add more exchange mappings
+        
+        response = mstarpy.search_stock(**search_params)
+        
+        # Format the response
+        formatted_results = []
+        for item in response:
+            try:
+                formatted_item = format_investment_data(item)
+                formatted_item['tcr'] = None  # Stocks don't have ongoing charges
+                # Only include if we have a valid identifier and name
+                if formatted_item['apir'] and formatted_item['name']:
+                    formatted_results.append(formatted_item)
+            except Exception as e:
+                print(f"Error formatting stock item: {e}")
+                continue
+        
+        # Limit results
+        final_results = formatted_results[:page_size]
+        
+        return jsonify({
+            'success': True, 
+            'results': final_results,
+            'count': len(final_results),
+            'total_found': len(formatted_results),
+            'country': country
+        })
+        
+    except Exception as e:
+        print(f"Error in search_stocks: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/search/australia', methods=['GET'])
+def search_australia():
+    """Search specifically in Australian Morningstar data (morningstar.com.au)"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        search_type = request.args.get('type', 'combined')  # 'funds', 'stocks', or 'combined'
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        print(f"Australian search: term='{term}', type='{search_type}', pageSize={page_size}")
+        
+        all_results = []
+        
+        # Search Australian funds
+        if search_type in ['funds', 'combined']:
+            try:
+                print(f"Searching Australian funds for: {term}")
+                
+                # Enhanced field list to capture all possible Australian data
+                enhanced_fields = [
+                    "Name", "FundName", "SecurityName",
+                    "fundShareClassId", "SecId", "Ticker", "TenforeId", 
+                    "APIR", "apir", "ApirCode", "APIR_Code", "FundId", "InvestmentId", "Code", "Symbol",
+                    "isin", "ISIN",
+                    "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                    "ReturnM3", "ReturnM12", "ReturnM36", "ReturnM60", "ReturnM120",  # Alternative return fields
+                    "ongoingCharge", "ManagementFee", "ExpenseRatio", "TotalExpenseRatio",
+                    "globalAssetClassId", "AssetClass", "LargestSector", "SectorName", "Sector",
+                    "MarketCountryName", "Country", "DomicileCountry", 
+                    "currency", "Currency", "ExchangeId", "Exchange", 
+                    "CategoryName", "FeeLevel", "starRating", "MorningstarRating",
+                    "FundSize", "TotalAssets", "NetAssets"
+                ]
+                
+                funds_response = mstarpy.search_funds(
+                    term=term,
+                    field=enhanced_fields,
+                    country="au",  # Specifically target Australian data
+                    currency="AUD",
+                    pageSize=page_size * 3 if search_type == 'funds' else page_size
+                )
+                
+                print(f"Found {len(funds_response)} Australian funds")
+                
+                for item in funds_response:
+                    try:
+                        print(f"Processing fund item: {item}")
+                        formatted_item = format_investment_data(item)
+                        if formatted_item['name'] and (formatted_item['apir'] or len(formatted_item['name']) > 3):
+                            formatted_item['type'] = 'Fund'
+                            formatted_item['source'] = 'Morningstar Australia'
+                            all_results.append(formatted_item)
+                    except Exception as e:
+                        print(f"Error formatting fund item: {e}")
+                        print(f"Item that caused error: {item}")
+                        continue
+                        
+            except Exception as e:
+                print(f"Error searching Australian funds: {e}")
+                import traceback
+                traceback.print_exc()
+        
+        # Search Australian stocks (ASX)
+        if search_type in ['stocks', 'combined']:
+            try:
+                print(f"Searching ASX stocks for: {term}")
+                
+                enhanced_stock_fields = [
+                    "Name", "SecurityName", "CompanyName",
+                    "fundShareClassId", "SecId", "Ticker", "TenforeId", "Symbol", "Code",
+                    "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                    "ReturnM3", "ReturnM12", "ReturnM36", "ReturnM60", "ReturnM120",
+                    "SectorName", "IndustryName", "Sector", "Industry",
+                    "ExchangeId", "Exchange", "MarketCountryName", "Country", 
+                    "currency", "Currency", "ClosePrice", "LastPrice",
+                    "MarketCap", "MarketCapitalization", "PERatio", "PE"
+                ]
+                
+                stocks_response = mstarpy.search_stock(
+                    term=term,
+                    field=enhanced_stock_fields,
+                    exchange='XASX',  # Australian Securities Exchange
+                    pageSize=page_size * 3 if search_type == 'stocks' else page_size
+                )
+                
+                print(f"Found {len(stocks_response)} ASX stocks")
+                
+                for item in stocks_response:
+                    try:
+                        print(f"Processing stock item: {item}")
+                        formatted_item = format_investment_data(item)
+                        formatted_item['tcr'] = None  # Stocks don't have ongoing charges
+                        if formatted_item['name'] and (formatted_item['apir'] or len(formatted_item['name']) > 3):
+                            formatted_item['type'] = 'Stock'
+                            formatted_item['source'] = 'ASX via Morningstar Australia'
+                            all_results.append(formatted_item)
+                    except Exception as e:
+                        print(f"Error formatting stock item: {e}")
+                        print(f"Item that caused error: {item}")
+                        continue
+                        
+            except Exception as e:
+                print(f"Error searching ASX stocks: {e}")
+                import traceback
+                traceback.print_exc()
+        
+        print(f"Total Australian results found: {len(all_results)}")
+        
+        # Remove duplicates and sort by relevance
+        unique_results = []
+        seen_names = set()
+        
+        for result in all_results:
+            result_key = (result['name'].lower(), result['apir'])
+            if result_key not in seen_names:
+                seen_names.add(result_key)
+                unique_results.append(result)
+        
+        print(f"Unique Australian results: {len(unique_results)}")
+        
+        return jsonify({
+            'success': True,
+            'results': unique_results[:page_size],
+            'count': len(unique_results[:page_size]),
+            'total_found': len(unique_results),
+            'country': 'Australia',
+            'source': 'Morningstar Australia',
+            'debug': {
+                'raw_results_count': len(all_results),
+                'unique_results_count': len(unique_results),
+                'search_term': term,
+                'search_type': search_type
+            }
+        })
+        
+    except Exception as e:
+        print(f"Error in search_australia: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/search/combined', methods=['GET'])
+def search_combined():
+    """Search for both funds and stocks with a single term"""
+    try:
+        term = request.args.get('term', '')
+        page_size = int(request.args.get('pageSize', 20))
+        country = request.args.get('country', None)  # Optional country parameter
+        
+        if not term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        all_results = []
+        
+        # Search funds first
+        try:
+            search_params = {
+                'term': term,
+                'field': [
+                    "Name", "fundShareClassId", "SecId", "Ticker", "TenforeId",
+                    "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                    "ongoingCharge", "globalAssetClassId", "LargestSector", "MarketCountryName", "currency", "ExchangeId"
+                ],
+                'pageSize': page_size
+            }
+            
+            if country:
+                search_params['country'] = country
+                if country.lower() == 'au':
+                    search_params['currency'] = 'AUD'
+            
+            funds_response = mstarpy.search_funds(**search_params)
+            
+            for item in funds_response:
+                try:
+                    formatted_item = format_investment_data(item)
+                    if formatted_item['apir'] and formatted_item['name']:
+                        formatted_item['type'] = 'Fund'
+                        all_results.append(formatted_item)
+                except:
+                    continue
+                    
+        except Exception as e:
+            print(f"Error searching funds: {e}")
+        
+        # Search stocks if we need more results
+        if len(all_results) < page_size:
+            try:
+                stock_search_params = {
+                    'term': term,
+                    'field': [
+                        "Name", "fundShareClassId", "SecId", "Ticker", "TenforeId",
+                        "GBRReturnM3", "GBRReturnM12", "GBRReturnM36", "GBRReturnM60", "GBRReturnM120",
+                        "SectorName", "IndustryName", "ExchangeId", "MarketCountryName", "currency"
+                    ],
+                    'pageSize': page_size - len(all_results)
                 }
-            }, 250);
-        });
-    </script>
-</body>
-</html>
+                
+                if country and country.lower() == 'au':
+                    stock_search_params['exchange'] = 'XASX'
+                
+                stocks_response = mstarpy.search_stock(**stock_search_params)
+                
+                for item in stocks_response:
+                    try:
+                        formatted_item = format_investment_data(item)
+                        formatted_item['tcr'] = None  # Stocks don't have ongoing charges
+                        if formatted_item['apir'] and formatted_item['name']:
+                            formatted_item['type'] = 'Stock'
+                            all_results.append(formatted_item)
+                    except:
+                        continue
+                        
+            except Exception as e:
+                print(f"Error searching stocks: {e}")
+        
+        return jsonify({
+            'success': True,
+            'results': all_results[:page_size],
+            'count': len(all_results[:page_size]),
+            'total_found': len(all_results),
+            'country': country
+        })
+        
+    except Exception as e:
+        print(f"Error in search_combined: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/test/search', methods=['GET'])
+def test_search():
+    """Test search endpoint to debug specific searches"""
+    try:
+        term = request.args.get('term', 'TGP0034')
+        
+        print(f"=== TEST SEARCH FOR: {term} ===")
+        
+        # Try searching Australian funds with extensive debugging
+        try:
+            response = mstarpy.search_funds(
+                term=term,
+                country="au",
+                currency="AUD",
+                pageSize=50
+            )
+            
+            print(f"Raw response type: {type(response)}")
+            print(f"Raw response length: {len(response) if hasattr(response, '__len__') else 'N/A'}")
+            print(f"Raw response sample: {response[:2] if hasattr(response, '__len__') and len(response) > 0 else response}")
+            
+            return jsonify({
+                'success': True,
+                'term': term,
+                'raw_response': response,
+                'count': len(response) if hasattr(response, '__len__') else 0
+            })
+            
+        except Exception as e:
+            print(f"Error in test search: {e}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({
+                'success': False,
+                'error': str(e),
+                'traceback': traceback.format_exc()
+            })
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
+    return jsonify({'status': 'healthy', 'message': 'Global Morningstar API is running'})
+
+@app.route('/')
+def home():
+    """Basic home route"""
+    return jsonify({
+        'message': 'Global Investment Performance API with Morningstar is running',
+        'status': 'live',
+        'coverage': 'Global markets (all regions and exchanges)',
+        'endpoints': [
+            '/api/health', 
+            '/api/search/funds', 
+            '/api/search/stocks', 
+            '/api/search/combined',
+            '/api/search/australia'
+        ],
+        'country_support': {
+            'global': 'Search all markets globally',
+            'australia': 'Search Australian data specifically (morningstar.com.au with APIR codes)',
+            'other_countries': 'Add ?country=us, ?country=uk etc. to target specific countries'
+        }
+    })
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    print("Starting Global Morningstar API server...")
+    app.run(debug=True, host='0.0.0.0', port=port)
