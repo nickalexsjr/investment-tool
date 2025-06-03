@@ -991,6 +991,8 @@
             const resultsDiv = document.getElementById('searchResults');
             const resultsSection = document.getElementById('searchResultsSection');
             
+            console.log('Displaying results:', results, 'Source:', source);
+            
             if (results.length === 0) {
                 resultsDiv.innerHTML = '<p class="text-muted text-center">No investments found</p>';
             } else {
@@ -1018,13 +1020,20 @@
                         badge += `<span class="badge bg-info ms-1">${item.type}</span>`;
                     }
                     
+                    // Show more debugging info for APIR codes
+                    const codeDisplay = item.apir || 'N/A';
+                    let codeClass = '';
+                    if (item.apir && item.apir.toUpperCase().includes('AU')) {
+                        codeClass = 'text-success fw-bold';
+                    }
+                    
                     return `
                         <div class="investment-result ${sourceClass}">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <div>
                                     <h6 class="mb-2">${item.name} ${badge}</h6>
                                     <small class="text-muted">
-                                        Code: ${item.apir || 'N/A'} 
+                                        Code: <span class="${codeClass}">${codeDisplay}</span>
                                         ${item.tcr !== null ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
                                         ${item.sector ? '| Sector: ' + item.sector : ''}
                                         ${item.exchange ? '| Exchange: ' + item.exchange : ''}
@@ -1053,6 +1062,38 @@
             
             resultsSection.style.display = 'block';
         }
+
+        // Test function for debugging specific searches
+        async function testSearch(term = 'TGP0034') {
+            try {
+                console.log(`Testing search for: ${term}`);
+                const response = await fetch(`${API_BASE_URL}/test/search?term=${term}`);
+                const data = await response.json();
+                console.log('Test search result:', data);
+                return data;
+            } catch (error) {
+                console.error('Test search error:', error);
+                return null;
+            }
+        }
+
+        // Add a test button to the page (for debugging)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add test button after loading
+            setTimeout(() => {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    const testBtn = document.createElement('button');
+                    testBtn.innerHTML = 'Test TGP0034 Search';
+                    testBtn.className = 'btn btn-warning btn-sm';
+                    testBtn.style.position = 'fixed';
+                    testBtn.style.top = '10px';
+                    testBtn.style.right = '10px';
+                    testBtn.style.zIndex = '9999';
+                    testBtn.onclick = () => testSearch('TGP0034');
+                    document.body.appendChild(testBtn);
+                }
+            }, 2000);
+        });
         
         // Add investment to portfolio
         function addToPortfolio(investment, portfolioType) {
