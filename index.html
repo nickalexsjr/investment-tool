@@ -501,7 +501,7 @@
             <!-- Morningstar Australian Search Section -->
             <div id="australiaSearch" class="search-section">
                 <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> <strong>Australian Search:</strong> This uses multiple search strategies to find Australian investments from morningstar.com.au. Accepts all Australian investment codes, not just those ending in 'AU'. Results are intelligently filtered to show genuine Australian investments.
+                    <i class="bi bi-info-circle"></i> <strong>Australian Search:</strong> This searches morningstar.com.au specifically for Australian funds with proper APIR codes (ending in 'AU') and ASX stocks. Non-Australian results are automatically filtered out.
                 </div>
                 <div class="row">
                     <div class="col-md-4">
@@ -1042,7 +1042,6 @@
                                         ${item.tcr !== null ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
                                         ${item.sector ? '| Sector: ' + item.sector : ''}
                                         ${exchangeDisplay}
-                                        ${strategyBadge}
                                     </small>
                                     <div class="mt-2 d-flex flex-wrap">
                                         ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
@@ -1069,22 +1068,13 @@
             resultsSection.style.display = 'block';
         }
 
-        // Test function for debugging specific searches with multiple strategies
+        // Test function for debugging specific searches
         async function testSearch(term = 'TGP0034') {
             try {
-                console.log(`Testing multiple search strategies for: ${term}`);
+                console.log(`Testing search for: ${term}`);
                 const response = await fetch(`${API_BASE_URL}/test/search?term=${term}`);
                 const data = await response.json();
-                console.log('Multi-strategy test result:', data);
-                
-                if (data.success) {
-                    console.log(`Best strategy: ${data.summary.best_strategy}`);
-                    console.log(`Total valid results found: ${data.summary.total_valid_found}`);
-                    data.strategies_tested.forEach(strategy => {
-                        console.log(`${strategy.name}: ${strategy.valid_count}/${strategy.raw_count} valid results`);
-                    });
-                }
-                
+                console.log('Test search result:', data);
                 return data;
             } catch (error) {
                 console.error('Test search error:', error);
@@ -1098,7 +1088,7 @@
             setTimeout(() => {
                 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                     const testBtn = document.createElement('button');
-                    testBtn.innerHTML = 'Test Multi-Strategy Search';
+                    testBtn.innerHTML = 'Test TGP0034 Search';
                     testBtn.className = 'btn btn-warning btn-sm';
                     testBtn.style.position = 'fixed';
                     testBtn.style.top = '10px';
