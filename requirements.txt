@@ -5,3 +5,5 @@ pandas==2.0.3
 mstarpy==3.0.0
 requests==2.31.0
 lxml==4.9.3
+beautifulsoup4==4.12.2
+aiohttp==3.8.5
