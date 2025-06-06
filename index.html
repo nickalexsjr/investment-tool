@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Australian Investment Performance Tool</title>
+    <title>Comprehensive Australian Investment Performance Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
@@ -466,7 +466,7 @@
 </head>
 <body>
     <div class="main-container">
-        <h1><i class="bi bi-globe"></i> Enhanced Investment Performance Tool</h1>
+        <h1><i class="bi bi-globe"></i> Enhanced Australian Investment Performance Tool</h1>
         
         <!-- Search Section -->
         <div class="glass-card">
@@ -514,9 +514,9 @@
             <!-- Enhanced Australian Search Section -->
             <div id="australiaSearch" class="search-section">
                 <div class="alert alert-success">
-                    <i class="bi bi-star-fill"></i> <strong>Enhanced Australian Search:</strong> 
-                    This searches multiple data sources including major Australian super funds (AustralianSuper, HESTA, Hostplus, etc.), 
-                    enhanced Morningstar Australia targeting, and ASX stocks with proper APIR codes.
+                    <i class="bi bi-star-fill"></i> <strong>Comprehensive Australian Search:</strong> 
+                    This searches actual investment options within major super funds (e.g., "AustralianSuper Balanced", "HESTA Growth"), 
+                    ASX ETFs with real APIR codes, performance data scraped from multiple sources, and enhanced Morningstar targeting.
                 </div>
                 <div class="row">
                     <div class="col-md-4">
@@ -537,20 +537,20 @@
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-center">
-                        <button class="search-btn w-100" onclick="performEnhancedAustralianSearch()">
+                        <button class="search-btn w-100" onclick="performComprehensiveAustralianSearch()">
                             <i class="bi bi-search"></i> Search
                         </button>
                     </div>
                 </div>
                 <div class="mt-2">
                     <small class="text-muted">
-                        <strong>Popular searches:</strong> 
-                        <a href="#" onclick="quickSearch('AustralianSuper')">AustralianSuper</a> | 
-                        <a href="#" onclick="quickSearch('HESTA')">HESTA</a> | 
-                        <a href="#" onclick="quickSearch('Hostplus')">Hostplus</a> | 
+                        <strong>Try these searches:</strong> 
+                        <a href="#" onclick="quickSearch('AustralianSuper Balanced')">AustralianSuper Balanced</a> | 
+                        <a href="#" onclick="quickSearch('HESTA Balanced Growth')">HESTA Balanced Growth</a> | 
+                        <a href="#" onclick="quickSearch('Hostplus Balanced')">Hostplus Balanced</a> | 
+                        <a href="#" onclick="quickSearch('VAS')">VAS (ASX ETF)</a> | 
                         <a href="#" onclick="quickSearch('UniSuper')">UniSuper</a> | 
-                        <a href="#" onclick="quickSearch('REST')">REST</a> | 
-                        <a href="#" onclick="quickSearch('Cbus')">Cbus</a>
+                        <a href="#" onclick="quickSearch('REST')">REST</a>
                     </small>
                 </div>
             </div>
@@ -769,10 +769,10 @@
             document.getElementById('searchResultsSection').style.display = 'none';
         }
         
-        // Quick search function for popular Australian super funds
+        // Quick search function for popular Australian investments
         function quickSearch(term) {
             document.getElementById('australiaName').value = term;
-            performEnhancedAustralianSearch();
+            performComprehensiveAustralianSearch();
         }
         
         // Load CSV data
@@ -890,14 +890,14 @@
             displaySearchResults(results, 'CSV Data');
         }
 
-        // Perform Enhanced Australian search
-        async function performEnhancedAustralianSearch() {
-            console.log('performEnhancedAustralianSearch called');
+        // Perform Comprehensive Australian search
+        async function performComprehensiveAustralianSearch() {
+            console.log('performComprehensiveAustralianSearch called');
             const nameQuery = document.getElementById('australiaName').value.trim();
             const codeQuery = document.getElementById('australiaCode').value.trim();
             const searchType = document.getElementById('australiaType').value;
             
-            console.log('Enhanced Australian Search inputs:', { nameQuery, codeQuery, searchType });
+            console.log('Comprehensive Australian Search inputs:', { nameQuery, codeQuery, searchType });
             
             if (!nameQuery && !codeQuery) {
                 alert('Please enter a search term (name or code)');
@@ -908,16 +908,16 @@
             const term = [nameQuery, codeQuery].filter(t => t).join(' ');
             console.log('Combined search term:', term);
             
-            // Show loading
+            // Show loading with enhanced message
             const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Enhanced Australian Database...</div></div>';
+            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Comprehensive Australian Database...</div><small>Including super fund options, ASX ETFs, and scraped performance data</small></div>';
             document.getElementById('searchResultsSection').style.display = 'block';
 
             try {
                 const params = new URLSearchParams({
                     term: term,
                     type: searchType,
-                    pageSize: '30'
+                    pageSize: '40'
                 });
 
                 const url = `${API_BASE_URL}/search/australia?${params}`;
@@ -926,20 +926,20 @@
                 const response = await fetch(url);
                 const data = await response.json();
                 
-                console.log('Enhanced Australian search response:', data);
+                console.log('Comprehensive Australian search response:', data);
                 
                 if (data.success) {
-                    displaySearchResults(data.results, 'Enhanced Australian Search', data.sources);
+                    displaySearchResults(data.results, 'Comprehensive Australian Search', data.sources);
                 } else {
                     throw new Error(data.error || 'Search failed');
                 }
                 
             } catch (error) {
-                console.error('Enhanced Australian search error:', error);
+                console.error('Comprehensive Australian search error:', error);
                 resultsDiv.innerHTML = `
                     <div class="alert alert-danger">
-                        Error searching Enhanced Australian Database: ${error.message}
-                        <br><small>Tip: Try searching for popular funds like "AustralianSuper", "HESTA", or "Hostplus"</small>
+                        <strong>Search Error:</strong> ${error.message}
+                        <br><small><strong>Try these specific searches:</strong> "AustralianSuper Balanced", "HESTA Balanced Growth", "VAS", "Hostplus Balanced"</small>
                     </div>
                 `;
             }
@@ -1022,6 +1022,7 @@
                 if (sources && sources.length > 0) {
                     sourcesInfo = `<div class="alert alert-info mb-3">
                         <i class="bi bi-info-circle"></i> <strong>Data Sources:</strong> ${sources.join(', ')}
+                        <br><small>Real APIR codes and performance data from multiple sources</small>
                     </div>`;
                 }
                 
@@ -1029,24 +1030,18 @@
                     let sourceClass = '';
                     let badge = '';
                     
-                    // Determine styling based on source
-                    if (item.status && item.status.includes('Super Fund Database')) {
+                    // Determine styling based on source and type
+                    if (item.status && item.status.includes('Super Fund Investment Option')) {
+                        sourceClass = 'super-fund';
+                        badge = '<span class="source-badge super-fund">🏛️ Super Option</span>';
+                    } else if (item.type === 'ETF') {
                         sourceClass = 'australian-database';
-                        badge = '<span class="source-badge australian-database">🏛️ AU Super</span>';
+                        badge = '<span class="source-badge australian-database">📈 ASX ETF</span>';
                     } else if (item.status && item.status.includes('Morningstar')) {
                         sourceClass = 'morningstar';
                         badge = '<span class="source-badge morningstar">⭐ Morningstar</span>';
-                    } else if (item.source && item.source.includes('Australian')) {
-                        sourceClass = 'australian-database';
-                        badge = '<span class="source-badge australian-database">🇦🇺 Australian</span>';
                     } else {
                         badge = '<span class="badge bg-secondary ms-2">CSV</span>';
-                    }
-                    
-                    // Add country badge for results
-                    if (item.country && item.country !== 'Australia') {
-                        const countryCode = item.country.toLowerCase().substring(0, 2);
-                        badge += `<span class="country-badge ${countryCode}">${item.country}</span>`;
                     }
                     
                     // Add type badge if available
@@ -1054,13 +1049,20 @@
                         badge += `<span class="badge bg-info ms-1">${item.type}</span>`;
                     }
                     
-                    // Special handling for super fund info
+                    // Enhanced info for super fund options
                     let extraInfo = '';
-                    if (item.abn || item.members || item.website) {
+                    if (item.fund_name || item.option_name || item.risk_level) {
                         extraInfo = `<div class="super-fund-info">
-                            ${item.abn ? `<strong>ABN:</strong> ${item.abn} ` : ''}
-                            ${item.members ? `<strong>Members:</strong> ${item.members} ` : ''}
-                            ${item.website ? `<strong>Website:</strong> ${item.website}` : ''}
+                            ${item.fund_name ? `<strong>Fund:</strong> ${item.fund_name} ` : ''}
+                            ${item.option_name ? `<strong>Option:</strong> ${item.option_name} ` : ''}
+                            ${item.risk_level ? `<strong>Risk:</strong> ${item.risk_level} ` : ''}
+                            ${item.suggested_timeframe ? `<strong>Timeframe:</strong> ${item.suggested_timeframe}` : ''}
+                        </div>`;
+                    } else if (item.ticker || item.fund_manager) {
+                        extraInfo = `<div class="super-fund-info">
+                            ${item.ticker ? `<strong>Ticker:</strong> ${item.ticker} ` : ''}
+                            ${item.fund_manager ? `<strong>Manager:</strong> ${item.fund_manager} ` : ''}
+                            ${item.exchange ? `<strong>Exchange:</strong> ${item.exchange}` : ''}
                         </div>`;
                     }
                     
@@ -1070,24 +1072,32 @@
                         codeClass = 'text-success fw-bold';
                     }
                     
+                    // Enhanced performance display
+                    let performanceDisplay = '';
+                    if (item.threeMonths !== null || item.oneYear !== null || item.threeYears !== null || 
+                        item.fiveYears !== null || item.tenYears !== null) {
+                        performanceDisplay = `<div class="mt-2 d-flex flex-wrap">
+                            ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
+                            ${item.oneYear !== null ? `<span class="performance-pill ${item.oneYear >= 0 ? 'performance-positive' : 'performance-negative'}">1Y: ${item.oneYear.toFixed(2)}%</span>` : ''}
+                            ${item.threeYears !== null ? `<span class="performance-pill ${item.threeYears >= 0 ? 'performance-positive' : 'performance-negative'}">3Y: ${item.threeYears.toFixed(2)}%</span>` : ''}
+                            ${item.fiveYears !== null ? `<span class="performance-pill ${item.fiveYears >= 0 ? 'performance-positive' : 'performance-negative'}"><strong>5Y: ${item.fiveYears.toFixed(2)}%</strong></span>` : ''}
+                            ${item.tenYears !== null ? `<span class="performance-pill ${item.tenYears >= 0 ? 'performance-positive' : 'performance-negative'}">10Y: ${item.tenYears.toFixed(2)}%</span>` : ''}
+                        </div>`;
+                    } else {
+                        performanceDisplay = '<div class="mt-2"><small class="text-muted">Performance data being retrieved...</small></div>';
+                    }
+                    
                     return `
                         <div class="investment-result ${sourceClass}">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <div style="flex: 1;">
                                     <h6 class="mb-2">${item.name} ${badge}</h6>
                                     <small class="text-muted">
-                                        Code: <span class="${codeClass}">${codeDisplay}</span>
-                                        ${item.tcr !== null && item.tcr !== undefined ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
-                                        ${item.sector ? '| Sector: ' + item.sector : ''}
-                                        ${item.exchange ? '| Exchange: ' + item.exchange : ''}
+                                        <strong>APIR:</strong> <span class="${codeClass}">${codeDisplay}</span>
+                                        ${item.tcr !== null && item.tcr !== undefined ? ' | <strong>TCR:</strong> ' + item.tcr.toFixed(2) + '%' : ''}
+                                        ${item.sector ? ' | <strong>Sector:</strong> ' + item.sector : ''}
                                     </small>
-                                    <div class="mt-2 d-flex flex-wrap">
-                                        ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
-                                        ${item.oneYear !== null ? `<span class="performance-pill ${item.oneYear >= 0 ? 'performance-positive' : 'performance-negative'}">1Y: ${item.oneYear.toFixed(2)}%</span>` : ''}
-                                        ${item.threeYears !== null ? `<span class="performance-pill ${item.threeYears >= 0 ? 'performance-positive' : 'performance-negative'}">3Y: ${item.threeYears.toFixed(2)}%</span>` : ''}
-                                        ${item.fiveYears !== null ? `<span class="performance-pill ${item.fiveYears >= 0 ? 'performance-positive' : 'performance-negative'}"><strong>5Y: ${item.fiveYears.toFixed(2)}%</strong></span>` : ''}
-                                        ${item.tenYears !== null ? `<span class="performance-pill ${item.tenYears >= 0 ? 'performance-positive' : 'performance-negative'}">10Y: ${item.tenYears.toFixed(2)}%</span>` : ''}
-                                    </div>
+                                    ${performanceDisplay}
                                     ${extraInfo}
                                 </div>
                                 <div style="flex-shrink: 0;">
@@ -1467,11 +1477,11 @@
         });
 
         document.getElementById('australiaName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performEnhancedAustralianSearch();
+            if (e.key === 'Enter') performComprehensiveAustralianSearch();
         });
 
         document.getElementById('australiaCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performEnhancedAustralianSearch();
+            if (e.key === 'Enter') performComprehensiveAustralianSearch();
         });
 
         document.getElementById('globalName').addEventListener('keypress', function(e) {
