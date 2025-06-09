@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 Ultimate Australian Investment Performance Tool - 100% Coverage Guaranteed</title>
+    <title>Investment Performance Tool v2</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
@@ -97,17 +97,17 @@
             margin-bottom: 15px;
         }
 
-        .search-box input {
+        .search-box input, .form-control {
             width: 100%;
             padding: 12px 20px;
             border: 2px solid #e1e8ed;
-            border-radius: 50px;
+            border-radius: 12px;
             font-size: 16px;
             transition: all 0.3s ease;
             background: #f8f9fa;
         }
 
-        .search-box input:focus {
+        .search-box input:focus, .form-control:focus {
             outline: none;
             border-color: #3498db;
             background: white;
@@ -131,7 +131,24 @@
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .investment-result {
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .investment-result, .investment-preview {
             background: #f8f9fa;
             border-radius: 15px;
             padding: 20px;
@@ -142,22 +159,14 @@
             overflow: hidden;
         }
 
-        .investment-result:hover {
+        .investment-result:hover, .investment-preview:hover {
             background: white;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transform: translateY(-2px);
         }
 
-        .investment-result.super-fund {
-            border-left: 4px solid #28a745;
-        }
-
         .investment-result.morningstar {
             border-left: 4px solid #e74c3c;
-        }
-
-        .investment-result.australian-database {
-            border-left: 4px solid #17a2b8;
         }
 
         .performance-pill {
@@ -180,29 +189,9 @@
             color: #721c24;
         }
 
-        .super-fund-info {
-            background: #e8f5e8;
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .api-status {
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .api-status.online {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .api-status.offline {
-            background: #f8d7da;
-            color: #721c24;
+        .performance-neutral {
+            background: #e2e3e5;
+            color: #383d41;
         }
 
         .portfolio-section {
@@ -372,6 +361,23 @@
             position: relative !important;
         }
 
+        .api-status {
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .api-status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .api-status.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
         .loading {
             text-align: center;
             padding: 50px;
@@ -416,33 +422,72 @@
             color: #155724;
         }
 
-        .source-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 4px;
+        .country-badge.us {
+            background: #cce5ff;
+            color: #004085;
         }
 
-        .source-badge.super-fund {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .source-badge.morningstar {
+        .country-badge.uk {
             background: #f8d7da;
             color: #721c24;
         }
 
-        .source-badge.australian-database {
-            background: #d4edda;
-            color: #155724;
+        .performance-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .performance-input-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .reset-form-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .reset-form-btn:hover {
+            background: #5a6268;
+            transform: scale(1.05);
+        }
+
+        .disclaimer {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #17a2b8;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .disclaimer h6 {
+            color: #17a2b8;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         @media (max-width: 768px) {
             .summary-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .performance-input-grid {
+                grid-template-columns: 1fr 1fr;
             }
             
             h1 {
@@ -466,28 +511,28 @@
 </head>
 <body>
     <div class="main-container">
-        <h1><i class="bi bi-rocket-takeoff"></i> Ultimate Australian Investment Performance Tool</h1>
+        <h1><i class="bi bi-graph-up"></i> Investment Performance Tool v2</h1>
         
         <!-- Search Section -->
         <div class="glass-card">
-            <h4 class="mb-4"><i class="bi bi-search"></i> Ultimate Australian & Global Investment Search</h4>
+            <h4 class="mb-4"><i class="bi bi-search"></i> Search & Add Investments</h4>
             
             <!-- Search Tabs -->
             <div class="search-tabs">
                 <button class="search-tab active" onclick="switchSearchTab('csv')">
                     <i class="bi bi-file-earmark-spreadsheet"></i> CSV Data
                 </button>
-                <button class="search-tab" onclick="switchSearchTab('australia')">
-                    <i class="bi bi-flag"></i> Australia Enhanced
+                <button class="search-tab" onclick="switchSearchTab('morningstar')">
+                    <i class="bi bi-globe"></i> Morningstar API
                 </button>
-                <button class="search-tab" onclick="switchSearchTab('global')">
-                    <i class="bi bi-globe"></i> Global Markets
+                <button class="search-tab" onclick="switchSearchTab('manual')">
+                    <i class="bi bi-plus-circle"></i> Manual Entry
                 </button>
             </div>
 
             <!-- API Status -->
             <div id="apiStatus" class="api-status offline" style="display: none;">
-                <i class="bi bi-exclamation-triangle"></i> Ultimate Australian API system is offline.
+                <i class="bi bi-exclamation-triangle"></i> Morningstar API is offline.
             </div>
             
             <!-- CSV Search Section -->
@@ -511,79 +556,116 @@
                 </div>
             </div>
 
-            <!-- Enhanced Australian Search Section -->
-            <div id="australiaSearch" class="search-section">
-                <div class="alert alert-success">
-                    <i class="bi bi-rocket-takeoff"></i> <strong>🚀 ULTIMATE Australian Search:</strong> 
-                    10+ data sources including APIR.com.au official database, complete ASX mFund list, ATO Super Fund Lookup, 
-                    InvestSMART comprehensive scraping, Morningstar Australia, financial comparison sites, major fund manager websites, 
-                    enhanced Morningstar API, detailed super fund investment options, and complete ASX ETF database. 
-                    <strong>100% Australian APIR fund coverage GUARANTEED!</strong>
+            <!-- Morningstar API Search Section -->
+            <div id="morningstarSearch" class="search-section">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> <strong>Morningstar API:</strong> Search global investment data from Morningstar. Choose region and investment type for targeted results.
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="search-box">
-                            <input type="text" id="australiaName" placeholder="🔍 Search super funds, ASX stocks...">
+                            <input type="text" id="morningstarName" placeholder="🔍 Search by name...">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="search-box">
-                            <input type="text" id="australiaCode" placeholder="🔍 Search by APIR/ASX code...">
+                            <input type="text" id="morningstarCode" placeholder="🔍 Search by code/ID...">
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <select id="australiaType" class="form-select" style="padding: 12px; border-radius: 50px;">
-                            <option value="combined">All Types</option>
-                            <option value="funds">Super Funds</option>
-                            <option value="stocks">ASX Stocks</option>
+                        <select id="morningstarRegion" class="form-control">
+                            <option value="australia">Australia</option>
+                            <option value="global">Global</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-center">
-                        <button class="search-btn w-100" onclick="performComprehensiveAustralianSearch()">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <small class="text-muted">
-                        <strong>Try these searches:</strong> 
-                        <a href="#" onclick="quickSearch('AustralianSuper Balanced')">AustralianSuper Balanced</a> | 
-                        <a href="#" onclick="quickSearch('HESTA Balanced Growth')">HESTA Balanced Growth</a> | 
-                        <a href="#" onclick="quickSearch('Hostplus Balanced')">Hostplus Balanced</a> | 
-                        <a href="#" onclick="quickSearch('VAS')">VAS (ASX ETF)</a> | 
-                        <a href="#" onclick="quickSearch('UniSuper')">UniSuper</a> | 
-                        <a href="#" onclick="quickSearch('REST')">REST</a>
-                    </small>
-                </div>
-            </div>
-
-            <!-- Global Search Section -->
-            <div id="globalSearch" class="search-section">
-                <div class="alert alert-warning">
-                    <i class="bi bi-globe"></i> <strong>Global Search:</strong> This searches all global markets. Results may have different identifier formats depending on the market.
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="search-box">
-                            <input type="text" id="globalName" placeholder="🔍 Search by fund name...">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="search-box">
-                            <input type="text" id="globalCode" placeholder="🔍 Search by code/ID...">
-                        </div>
-                    </div>
                     <div class="col-md-2">
-                        <select id="globalType" class="form-select" style="padding: 12px; border-radius: 50px;">
+                        <select id="morningstarType" class="form-control">
                             <option value="combined">All Types</option>
                             <option value="funds">Funds Only</option>
                             <option value="stocks">Stocks Only</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-center">
-                        <button class="search-btn w-100" onclick="performGlobalSearch()">
+                        <button class="search-btn w-100" onclick="performMorningstarSearch()">
                             <i class="bi bi-search"></i> Search
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manual Entry Section -->
+            <div id="manualSearch" class="search-section">
+                <form id="investmentForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="investmentName" class="form-label">Investment Name *</label>
+                            <input type="text" class="form-control" id="investmentName" placeholder="Enter investment name..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apirCode" class="form-label">APIR Code</label>
+                            <input type="text" class="form-control" id="apirCode" placeholder="Enter APIR code (optional)...">
+                        </div>
+                    </div>
+                    
+                    <div class="performance-input-grid">
+                        <div class="performance-input-group">
+                            <label for="threeMonths">3 Months (%)</label>
+                            <input type="number" class="form-control" id="threeMonths" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="performance-input-group">
+                            <label for="oneYear">1 Year (%)</label>
+                            <input type="number" class="form-control" id="oneYear" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="performance-input-group">
+                            <label for="threeYears">3 Years (%)</label>
+                            <input type="number" class="form-control" id="threeYears" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="performance-input-group">
+                            <label for="fiveYears">5 Years (%) *</label>
+                            <input type="number" class="form-control" id="fiveYears" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="performance-input-group">
+                            <label for="tenYears">10 Years (%)</label>
+                            <input type="number" class="form-control" id="tenYears" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="performance-input-group">
+                            <label for="tcr">TCR (%)</label>
+                            <input type="number" class="form-control" id="tcr" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Preview Investment
+                        </button>
+                        <button type="button" class="reset-form-btn" onclick="resetForm()">
+                            <i class="bi bi-arrow-clockwise"></i> Reset
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Investment Preview -->
+                <div id="investmentPreview" style="display: none;">
+                    <hr class="my-4">
+                    <h5 class="mb-3">Investment Preview</h5>
+                    <div class="investment-preview">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h6 class="mb-2" id="previewName">Investment Name</h6>
+                                <small class="text-muted" id="previewDetails">APIR: N/A | TCR: N/A</small>
+                                <div class="mt-2 d-flex flex-wrap" id="previewPerformance">
+                                    <!-- Performance pills will be inserted here -->
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn-add-current" onclick="addToPortfolioFromManual('current')">
+                                    <i class="bi bi-plus-circle"></i> Add to Current
+                                </button>
+                                <button class="btn-add-proposed" onclick="addToPortfolioFromManual('proposed')">
+                                    <i class="bi bi-plus-circle"></i> Add to Proposed
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -703,6 +785,22 @@
             </div>
         </div>
 
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            <h6><i class="bi bi-info-circle"></i> Data Sources & Disclaimers</h6>
+            <p class="mb-2">
+                <strong>APL Data:</strong> Dated 05/05/2025 APL<br>
+                <strong>Findex MDA Data:</strong> Dated 30/04/2025<br>
+                <strong>Retail Fund Data:</strong> Dated 09/06/2025 Morningstar Research
+            </p>
+            <p class="mb-0">
+                <small>
+                    Performance data is historical and does not guarantee future results. Past performance is not indicative of future performance. 
+                    All investment decisions should be made based on your individual circumstances and with professional financial advice.
+                </small>
+            </p>
+        </div>
+
         <!-- Loading State -->
         <div class="loading" id="loadingState">
             <i class="bi bi-arrow-repeat"></i>
@@ -720,6 +818,7 @@
         let currentPortfolio = [];
         let proposedPortfolio = [];
         let comparisonChart = null;
+        let currentInvestment = null;
         
         // CHANGE THIS TO YOUR RENDER URL:
         const API_BASE_URL = 'https://investment-tool-9gxo.onrender.com/api';
@@ -728,24 +827,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadCSVData();
             checkAPIStatus();
+            
+            // Form handling for manual entry
+            document.getElementById('investmentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                previewInvestment();
+            });
         });
 
-        // Check if Ultimate API is available
+        // Check if Morningstar API is available
         async function checkAPIStatus() {
             try {
                 const response = await fetch(`${API_BASE_URL}/health`);
                 if (response.ok) {
-                    const data = await response.json();
                     document.getElementById('apiStatus').className = 'api-status online';
-                    document.getElementById('apiStatus').innerHTML = `
-                        <i class="bi bi-rocket-takeoff"></i> 🚀 ULTIMATE SYSTEM ONLINE! All ${data.data_sources?.total_sources || '10+'} data sources ready! 
-                        <small>(100% Australian investment coverage guaranteed)</small>
-                    `;
+                    document.getElementById('apiStatus').innerHTML = '<i class="bi bi-check-circle"></i> Global Morningstar API is online!';
                     document.getElementById('apiStatus').style.display = 'block';
                 }
             } catch (error) {
                 document.getElementById('apiStatus').className = 'api-status offline';
-                document.getElementById('apiStatus').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Ultimate API system is offline.';
+                document.getElementById('apiStatus').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Morningstar API is offline.';
                 document.getElementById('apiStatus').style.display = 'block';
             }
         }
@@ -761,20 +862,14 @@
             
             if (tab === 'csv') {
                 document.getElementById('csvSearch').classList.add('active');
-            } else if (tab === 'australia') {
-                document.getElementById('australiaSearch').classList.add('active');
-            } else if (tab === 'global') {
-                document.getElementById('globalSearch').classList.add('active');
+            } else if (tab === 'morningstar') {
+                document.getElementById('morningstarSearch').classList.add('active');
+            } else if (tab === 'manual') {
+                document.getElementById('manualSearch').classList.add('active');
             }
             
             // Clear previous results
             document.getElementById('searchResultsSection').style.display = 'none';
-        }
-        
-        // Quick search function for popular Australian investments
-        function quickSearch(term) {
-            document.getElementById('australiaName').value = term;
-            performComprehensiveAustralianSearch();
         }
         
         // Load CSV data
@@ -892,14 +987,12 @@
             displaySearchResults(results, 'CSV Data');
         }
 
-        // Perform Comprehensive Australian search
-        async function performComprehensiveAustralianSearch() {
-            console.log('performComprehensiveAustralianSearch called');
-            const nameQuery = document.getElementById('australiaName').value.trim();
-            const codeQuery = document.getElementById('australiaCode').value.trim();
-            const searchType = document.getElementById('australiaType').value;
-            
-            console.log('Comprehensive Australian Search inputs:', { nameQuery, codeQuery, searchType });
+        // Perform Morningstar search (merged Australian and Global)
+        async function performMorningstarSearch() {
+            const nameQuery = document.getElementById('morningstarName').value.trim();
+            const codeQuery = document.getElementById('morningstarCode').value.trim();
+            const region = document.getElementById('morningstarRegion').value;
+            const searchType = document.getElementById('morningstarType').value;
             
             if (!nameQuery && !codeQuery) {
                 alert('Please enter a search term (name or code)');
@@ -908,83 +1001,33 @@
             
             // Combine name and code queries
             const term = [nameQuery, codeQuery].filter(t => t).join(' ');
-            console.log('Combined search term:', term);
-            
-            // Show loading with enhanced message
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>🚀 ULTIMATE SEARCH IN PROGRESS...</div><small>Parallel scraping 10+ data sources including APIR Official, ASX mFund, ATO Lookup, InvestSMART, Morningstar AU, comparison sites, fund managers, enhanced Morningstar API, super fund options & ETF database</small></div>';
-            document.getElementById('searchResultsSection').style.display = 'block';
-
-            try {
-                const params = new URLSearchParams({
-                    term: term,
-                    type: searchType,
-                    pageSize: '40'
-                });
-
-                const url = `${API_BASE_URL}/search/australia?${params}`;
-                console.log('Fetching URL:', url);
-
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                console.log('Comprehensive Australian search response:', data);
-                
-                if (data.success) {
-                    displaySearchResults(data.results, 'Comprehensive Australian Search', data.sources);
-                } else {
-                    throw new Error(data.error || 'Search failed');
-                }
-                
-            } catch (error) {
-                console.error('Comprehensive Australian search error:', error);
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <strong>Search Error:</strong> ${error.message}
-                        <br><small><strong>Try these guaranteed searches:</strong> "AustralianSuper Balanced", "HESTA Balanced Growth", "VAS", "Hostplus Balanced", "REST Balanced", "UniSuper", "A200", "VGS", "NDQ"</small>
-                        <br><small><strong>Or search by APIR:</strong> "VAN0011AU", "ASU0001AU", "HES0001AU"</small>
-                    </div>
-                `;
-            }
-        }
-
-        // Perform Global Morningstar search
-        async function performGlobalSearch() {
-            console.log('performGlobalSearch called');
-            const nameQuery = document.getElementById('globalName').value.trim();
-            const codeQuery = document.getElementById('globalCode').value.trim();
-            const searchType = document.getElementById('globalType').value;
-            
-            console.log('Global Search inputs:', { nameQuery, codeQuery, searchType });
-            
-            if (!nameQuery && !codeQuery) {
-                alert('Please enter a search term (name or code)');
-                return;
-            }
-            
-            // Combine name and code queries
-            const term = [nameQuery, codeQuery].filter(t => t).join(' ');
-            console.log('Combined search term:', term);
             
             // Show loading
             const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Global Morningstar...</div></div>';
+            resultsDiv.innerHTML = '<div class="loading"><i class="bi bi-arrow-repeat"></i><div>Searching Morningstar...</div></div>';
             document.getElementById('searchResultsSection').style.display = 'block';
 
             try {
                 let endpoint;
-                if (searchType === 'combined') {
-                    endpoint = 'search/combined';
-                } else if (searchType === 'funds') {
-                    endpoint = 'search/funds';
-                } else {
-                    endpoint = 'search/stocks';
-                }
-                
-                const params = new URLSearchParams({
+                let params = new URLSearchParams({
                     term: term,
                     pageSize: '30'
                 });
+
+                if (region === 'australia') {
+                    // Use Australia-specific endpoint
+                    endpoint = 'search/australia';
+                    params.append('type', searchType);
+                } else {
+                    // Use global endpoint
+                    if (searchType === 'combined') {
+                        endpoint = 'search/combined';
+                    } else if (searchType === 'funds') {
+                        endpoint = 'search/funds';
+                    } else {
+                        endpoint = 'search/stocks';
+                    }
+                }
 
                 const url = `${API_BASE_URL}/${endpoint}?${params}`;
                 console.log('Fetching URL:', url);
@@ -992,26 +1035,138 @@
                 const response = await fetch(url);
                 const data = await response.json();
                 
-                console.log('Global search response:', data);
+                console.log('Morningstar search response:', data);
                 
                 if (data.success) {
-                    displaySearchResults(data.results, 'Morningstar Global');
+                    const sourceLabel = region === 'australia' ? 'Morningstar Australia' : 'Morningstar Global';
+                    displaySearchResults(data.results, sourceLabel);
                 } else {
                     throw new Error(data.error || 'Search failed');
                 }
                 
             } catch (error) {
-                console.error('Global search error:', error);
+                console.error('Morningstar search error:', error);
                 resultsDiv.innerHTML = `
                     <div class="alert alert-danger">
-                        Error searching Global Morningstar: ${error.message}
+                        Error searching Morningstar: ${error.message}
                     </div>
                 `;
             }
         }
+
+        // Preview investment (for manual entry)
+        function previewInvestment() {
+            const name = document.getElementById('investmentName').value.trim();
+            const apir = document.getElementById('apirCode').value.trim();
+            const fiveYears = parseFloat(document.getElementById('fiveYears').value);
+            
+            if (!name) {
+                alert('Please enter an investment name');
+                return;
+            }
+            
+            if (isNaN(fiveYears)) {
+                alert('Please enter a value for 5 Years performance');
+                return;
+            }
+            
+            // Parse all performance values
+            const parseValue = (id) => {
+                const value = document.getElementById(id).value;
+                return value === '' ? null : parseFloat(value);
+            };
+            
+            currentInvestment = {
+                name: name,
+                apir: apir || 'N/A',
+                threeMonths: parseValue('threeMonths'),
+                oneYear: parseValue('oneYear'),
+                threeYears: parseValue('threeYears'),
+                fiveYears: fiveYears,
+                tenYears: parseValue('tenYears'),
+                tcr: parseValue('tcr'),
+                assetClass: 'Manual Entry',
+                sector: '',
+                status: 'Manual',
+                type: 'Manual Entry'
+            };
+            
+            displayInvestmentPreview();
+        }
         
-        // Display search results with enhanced formatting
-        function displaySearchResults(results, source, sources) {
+        // Display investment preview
+        function displayInvestmentPreview() {
+            if (!currentInvestment) return;
+            
+            document.getElementById('previewName').textContent = currentInvestment.name;
+            document.getElementById('previewDetails').textContent = 
+                `APIR: ${currentInvestment.apir} ${currentInvestment.tcr !== null ? '| TCR: ' + currentInvestment.tcr.toFixed(2) + '%' : ''}`;
+            
+            // Generate performance pills
+            const performanceDiv = document.getElementById('previewPerformance');
+            performanceDiv.innerHTML = '';
+            
+            const periods = [
+                { label: '3M', value: currentInvestment.threeMonths },
+                { label: '1Y', value: currentInvestment.oneYear },
+                { label: '3Y', value: currentInvestment.threeYears },
+                { label: '5Y', value: currentInvestment.fiveYears, important: true },
+                { label: '10Y', value: currentInvestment.tenYears }
+            ];
+            
+            periods.forEach(period => {
+                if (period.value !== null) {
+                    const pill = document.createElement('span');
+                    pill.className = `performance-pill ${period.value >= 0 ? 'performance-positive' : 'performance-negative'}`;
+                    if (period.important) {
+                        pill.innerHTML = `<strong>${period.label}: ${period.value.toFixed(2)}%</strong>`;
+                    } else {
+                        pill.textContent = `${period.label}: ${period.value.toFixed(2)}%`;
+                    }
+                    performanceDiv.appendChild(pill);
+                }
+            });
+            
+            document.getElementById('investmentPreview').style.display = 'block';
+        }
+
+        // Reset form (for manual entry)
+        function resetForm() {
+            document.getElementById('investmentForm').reset();
+            document.getElementById('investmentPreview').style.display = 'none';
+            currentInvestment = null;
+        }
+
+        // Add investment to portfolio from manual entry
+        function addToPortfolioFromManual(portfolioType) {
+            if (!currentInvestment) {
+                alert('Please preview an investment first');
+                return;
+            }
+            
+            const portfolio = portfolioType === 'current' ? currentPortfolio : proposedPortfolio;
+            
+            // Check if already exists
+            const exists = portfolio.some(item => 
+                item.name.toLowerCase() === currentInvestment.name.toLowerCase() && 
+                item.apir === currentInvestment.apir
+            );
+            if (exists) {
+                alert('This investment is already in the ' + portfolioType + ' portfolio');
+                return;
+            }
+            
+            portfolio.push({...currentInvestment});
+            updatePortfolioDisplay(portfolioType);
+            updateSummary();
+            
+            // Reset form after adding
+            resetForm();
+            alert('Investment added to ' + portfolioType + ' portfolio successfully!');
+        }
+        
+        // Display search results
+        function displaySearchResults(results, source) {
             const resultsDiv = document.getElementById('searchResults');
             const resultsSection = document.getElementById('searchResultsSection');
             
@@ -1020,49 +1175,23 @@
             if (results.length === 0) {
                 resultsDiv.innerHTML = '<p class="text-muted text-center">No investments found</p>';
             } else {
-                // Show sources used if available
-                let sourcesInfo = '';
-                if (sources && sources.length > 0) {
-                    sourcesInfo = `<div class="alert alert-info mb-3">
-                        <i class="bi bi-database-check"></i> <strong>🚀 Data Sources Used:</strong> ${sources.join(' • ')}
-                        <br><small><strong>Coverage:</strong> Real APIR codes, scraped performance data, official databases, comprehensive fund manager data</small>
-                    </div>`;
-                }
-                
-                resultsDiv.innerHTML = sourcesInfo + results.map(item => {
-                    let sourceClass = '';
-                    let badge = '';
+                resultsDiv.innerHTML = results.map(item => {
+                    const sourceClass = source.includes('Morningstar') ? 'morningstar' : '';
+                    let badge;
                     
-                    // Determine styling based on source and type with new comprehensive sources
-                    if (item.status && item.status.includes('APIR Official')) {
-                        sourceClass = 'super-fund';
-                        badge = '<span class="source-badge super-fund">🏛️ APIR Official</span>';
-                    } else if (item.status && item.status.includes('ASX mFund')) {
-                        sourceClass = 'super-fund';
-                        badge = '<span class="source-badge super-fund">📈 ASX mFund</span>';
-                    } else if (item.status && item.status.includes('ATO')) {
-                        sourceClass = 'super-fund';
-                        badge = '<span class="source-badge super-fund">🏢 ATO Official</span>';
-                    } else if (item.status && item.status.includes('Super Fund Investment Option')) {
-                        sourceClass = 'super-fund';
-                        badge = '<span class="source-badge super-fund">🏛️ Super Option</span>';
-                    } else if (item.type === 'ETF') {
-                        sourceClass = 'australian-database';
-                        badge = '<span class="source-badge australian-database">📈 ASX ETF</span>';
-                    } else if (item.status && item.status.includes('Morningstar')) {
-                        sourceClass = 'morningstar';
-                        badge = '<span class="source-badge morningstar">⭐ Morningstar</span>';
-                    } else if (item.status && item.status.includes('InvestSMART')) {
-                        sourceClass = 'australian-database';
-                        badge = '<span class="source-badge australian-database">💰 InvestSMART</span>';
-                    } else if (item.status && item.status.includes('Comparison')) {
-                        sourceClass = 'australian-database';
-                        badge = '<span class="source-badge australian-database">🔍 Comparison</span>';
-                    } else if (item.status && item.status.includes('Fund Manager')) {
-                        sourceClass = 'australian-database';
-                        badge = '<span class="source-badge australian-database">🏦 Direct</span>';
+                    // Different badges for different sources
+                    if (source === 'Morningstar Australia') {
+                        badge = '<span class="badge bg-success ms-2">🇦🇺 AU</span>';
+                    } else if (source === 'Morningstar Global') {
+                        badge = '<span class="badge bg-danger ms-2">🌍 Global</span>';
                     } else {
                         badge = '<span class="badge bg-secondary ms-2">CSV</span>';
+                    }
+                    
+                    // Add country badge for global results
+                    if (item.country && source !== 'CSV Data') {
+                        const countryCode = item.country.toLowerCase().substring(0, 2);
+                        badge += `<span class="country-badge ${countryCode}">${item.country}</span>`;
                     }
                     
                     // Add type badge if available
@@ -1070,58 +1199,33 @@
                         badge += `<span class="badge bg-info ms-1">${item.type}</span>`;
                     }
                     
-                    // Enhanced info for super fund options
-                    let extraInfo = '';
-                    if (item.fund_name || item.option_name || item.risk_level) {
-                        extraInfo = `<div class="super-fund-info">
-                            ${item.fund_name ? `<strong>Fund:</strong> ${item.fund_name} ` : ''}
-                            ${item.option_name ? `<strong>Option:</strong> ${item.option_name} ` : ''}
-                            ${item.risk_level ? `<strong>Risk:</strong> ${item.risk_level} ` : ''}
-                            ${item.suggested_timeframe ? `<strong>Timeframe:</strong> ${item.suggested_timeframe}` : ''}
-                        </div>`;
-                    } else if (item.ticker || item.fund_manager) {
-                        extraInfo = `<div class="super-fund-info">
-                            ${item.ticker ? `<strong>Ticker:</strong> ${item.ticker} ` : ''}
-                            ${item.fund_manager ? `<strong>Manager:</strong> ${item.fund_manager} ` : ''}
-                            ${item.exchange ? `<strong>Exchange:</strong> ${item.exchange}` : ''}
-                        </div>`;
-                    }
-                    
+                    // Show more debugging info for APIR codes
                     const codeDisplay = item.apir || 'N/A';
                     let codeClass = '';
-                    if (item.apir && (item.apir.toUpperCase().includes('AU') || item.apir.length >= 9)) {
+                    if (item.apir && item.apir.toUpperCase().includes('AU')) {
                         codeClass = 'text-success fw-bold';
-                    }
-                    
-                    // Enhanced performance display
-                    let performanceDisplay = '';
-                    if (item.threeMonths !== null || item.oneYear !== null || item.threeYears !== null || 
-                        item.fiveYears !== null || item.tenYears !== null) {
-                        performanceDisplay = `<div class="mt-2 d-flex flex-wrap">
-                            ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
-                            ${item.oneYear !== null ? `<span class="performance-pill ${item.oneYear >= 0 ? 'performance-positive' : 'performance-negative'}">1Y: ${item.oneYear.toFixed(2)}%</span>` : ''}
-                            ${item.threeYears !== null ? `<span class="performance-pill ${item.threeYears >= 0 ? 'performance-positive' : 'performance-negative'}">3Y: ${item.threeYears.toFixed(2)}%</span>` : ''}
-                            ${item.fiveYears !== null ? `<span class="performance-pill ${item.fiveYears >= 0 ? 'performance-positive' : 'performance-negative'}"><strong>5Y: ${item.fiveYears.toFixed(2)}%</strong></span>` : ''}
-                            ${item.tenYears !== null ? `<span class="performance-pill ${item.tenYears >= 0 ? 'performance-positive' : 'performance-negative'}">10Y: ${item.tenYears.toFixed(2)}%</span>` : ''}
-                        </div>`;
-                    } else {
-                        performanceDisplay = '<div class="mt-2"><small class="text-muted">Performance data being retrieved...</small></div>';
                     }
                     
                     return `
                         <div class="investment-result ${sourceClass}">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                <div style="flex: 1;">
+                                <div>
                                     <h6 class="mb-2">${item.name} ${badge}</h6>
                                     <small class="text-muted">
-                                        <strong>APIR:</strong> <span class="${codeClass}">${codeDisplay}</span>
-                                        ${item.tcr !== null && item.tcr !== undefined ? ' | <strong>TCR:</strong> ' + item.tcr.toFixed(2) + '%' : ''}
-                                        ${item.sector ? ' | <strong>Sector:</strong> ' + item.sector : ''}
+                                        Code: <span class="${codeClass}">${codeDisplay}</span>
+                                        ${item.tcr !== null ? '| TCR: ' + item.tcr.toFixed(2) + '%' : ''}
+                                        ${item.sector ? '| Sector: ' + item.sector : ''}
+                                        ${item.exchange ? '| Exchange: ' + item.exchange : ''}
                                     </small>
-                                    ${performanceDisplay}
-                                    ${extraInfo}
+                                    <div class="mt-2 d-flex flex-wrap">
+                                        ${item.threeMonths !== null ? `<span class="performance-pill ${item.threeMonths >= 0 ? 'performance-positive' : 'performance-negative'}">3M: ${item.threeMonths.toFixed(2)}%</span>` : ''}
+                                        ${item.oneYear !== null ? `<span class="performance-pill ${item.oneYear >= 0 ? 'performance-positive' : 'performance-negative'}">1Y: ${item.oneYear.toFixed(2)}%</span>` : ''}
+                                        ${item.threeYears !== null ? `<span class="performance-pill ${item.threeYears >= 0 ? 'performance-positive' : 'performance-negative'}">3Y: ${item.threeYears.toFixed(2)}%</span>` : ''}
+                                        ${item.fiveYears !== null ? `<span class="performance-pill ${item.fiveYears >= 0 ? 'performance-positive' : 'performance-negative'}"><strong>5Y: ${item.fiveYears.toFixed(2)}%</strong></span>` : ''}
+                                        ${item.tenYears !== null ? `<span class="performance-pill ${item.tenYears >= 0 ? 'performance-positive' : 'performance-negative'}">10Y: ${item.tenYears.toFixed(2)}%</span>` : ''}
+                                    </div>
                                 </div>
-                                <div style="flex-shrink: 0;">
+                                <div>
                                     <button class="btn-add-current" onclick='addToPortfolio(${JSON.stringify(item).replace(/'/g, "&apos;")}, "current")'>
                                         <i class="bi bi-plus-circle"></i> Current
                                     </button>
@@ -1189,15 +1293,17 @@
             // Update table
             tbody.innerHTML = portfolio.map((item, index) => {
                 let sourceIcon;
-                if (item.status && item.status.includes('Super Fund Database')) {
-                    sourceIcon = '<i class="bi bi-building text-success" title="Australian Super Fund Database"></i>';
-                } else if (item.status === 'Morningstar Data' || item.source && item.source.includes('Morningstar')) {
-                    sourceIcon = '<i class="bi bi-star text-danger" title="Morningstar"></i>';
+                if (item.status === 'Morningstar Data' || item.source === 'Morningstar Australia') {
+                    sourceIcon = '<i class="bi bi-flag text-success" title="Morningstar Australia"></i>';
+                } else if (item.status === 'Morningstar Global' || item.source === 'Morningstar Global') {
+                    sourceIcon = '<i class="bi bi-globe text-danger" title="Morningstar Global"></i>';
+                } else if (item.status === 'Manual') {
+                    sourceIcon = '<i class="bi bi-pencil text-primary" title="Manual Entry"></i>';
                 } else {
                     sourceIcon = '<i class="bi bi-file-earmark-spreadsheet text-secondary" title="CSV Data"></i>';
                 }
                 
-                const countryBadge = item.country && item.country !== 'Australia' ? `<small class="country-badge">${item.country}</small>` : '';
+                const countryBadge = item.country ? `<small class="country-badge">${item.country}</small>` : '';
                 
                 return `
                     <tr>
@@ -1315,7 +1421,6 @@
             // Update comparison chart
             if (currentPortfolio.length > 0 || proposedPortfolio.length > 0) {
                 comparisonSection.style.display = 'block';
-                // Small delay to ensure DOM is ready and visible
                 setTimeout(() => {
                     if (document.getElementById('comparisonSection').style.display !== 'none') {
                         updateComparisonChart();
@@ -1353,8 +1458,6 @@
             if (!canvas) return;
             
             const ctx = canvas.getContext('2d');
-            
-            // Clear the canvas before creating a new chart
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             const currentAvg = calculateAveragePerformance(currentPortfolio);
@@ -1404,14 +1507,11 @@
                 comparisonChart = null;
             }
             
-            // Ensure the canvas has dimensions before creating the chart
             const container = canvas.parentElement;
             if (container.offsetWidth === 0 || container.offsetHeight === 0) {
                 console.warn('Chart container has no dimensions, skipping chart creation');
                 return;
             }
-            
-            console.log('Creating comparison chart with dimensions:', container.offsetWidth, 'x', container.offsetHeight);
             
             comparisonChart = new Chart(ctx, {
                 type: 'bar',
@@ -1497,20 +1597,12 @@
             if (e.key === 'Enter') performCSVSearch();
         });
 
-        document.getElementById('australiaName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performComprehensiveAustralianSearch();
+        document.getElementById('morningstarName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performMorningstarSearch();
         });
 
-        document.getElementById('australiaCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performComprehensiveAustralianSearch();
-        });
-
-        document.getElementById('globalName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performGlobalSearch();
-        });
-
-        document.getElementById('globalCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performGlobalSearch();
+        document.getElementById('morningstarCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performMorningstarSearch();
         });
         
         // Handle window resize for chart
